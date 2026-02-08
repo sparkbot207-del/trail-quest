@@ -1151,7 +1151,16 @@
 
         <!-- Main content will be rendered dynamically -->
         <div id="game-content" style="grid-column: 1 / -1; display: contents;">
-            <!-- Start screen shown initially -->
+            <!-- Loading indicator shown until JS renders -->
+            <div class="main-screen" style="grid-column: 1 / -1;">
+                <div class="game-screen" style="display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">⚡</div>
+                        <div style="color: var(--primary); font-family: 'Press Start 2P', cursive; font-size: 0.8rem;">LOADING...</div>
+                        <div id="load-error" style="color: #ff4444; margin-top: 20px; display: none;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -1177,9 +1186,21 @@
         </div>
     </div>
 
+    <!-- Global error handler -->
+    <script>
+    window.onerror = function(msg, url, line, col, error) {
+        const el = document.getElementById('load-error');
+        if (el) {
+            el.innerHTML = 'JS Error: ' + msg + '<br>Line ' + line + ' in ' + (url.split('/').pop());
+            el.style.display = 'block';
+        }
+        return false;
+    };
+    </script>
+    
     <!-- Bike Builder System -->
-    <script src="js/bike-builder.js"></script>
-    <script src="js/garage-ui.js"></script>
+    <script src="js/bike-builder.js" onerror="document.getElementById('load-error').textContent='Failed to load bike-builder.js';document.getElementById('load-error').style.display='block';"></script>
+    <script src="js/garage-ui.js" onerror="document.getElementById('load-error').textContent='Failed to load garage-ui.js';document.getElementById('load-error').style.display='block';"></script>
     
     <script>
     // ============================================================
