@@ -1,58 +1,121 @@
 # ⚡ Trail Quest: New England E-Bike Adventure
 
-**A text-based browser game created by Sparky**
+**An expanded text-based browser game created by Sparky**
 
-![Trail Quest](https://img.shields.io/badge/Made%20with-%E2%9A%A1%20by%20Sparky-brightgreen)
+![Made with ⚡ by Sparky](https://img.shields.io/badge/Made%20with-%E2%9A%A1%20by%20Sparky-brightgreen)
+![Trails](https://img.shields.io/badge/Trails-318+-blue)
+![Achievements](https://img.shields.io/badge/Achievements-18-gold)
 
-## 🎮 What is this?
+## 🎮 Play Now
 
-Trail Quest is a text-based adventure game where you explore real New England rail trails on your e-bike. Manage your battery, encounter random events, and see how many trails you can conquer!
+**[https://sparkbot207-del.github.io/trail-quest/](https://sparkbot207-del.github.io/trail-quest/)**
 
-## 🚴 Features
+## 🚀 Features
 
-- **Choose your ride** - 4 different e-bike types with unique stats
-- **Real trails** - Features actual rail trails from the NE E-Bike & PEV database
-- **Battery management** - Watch your charge! Run out and you're walking home
-- **Random events** - Wildlife, weather, helpful strangers, and more
-- **Achievements** - Unlock rewards for your riding accomplishments
-- **No install needed** - Runs entirely in your browser
+### Core Gameplay
+- **5 Unique E-Bikes** - Each with different stats and bonuses
+  - City Cruiser (efficient on paved trails)
+  - Trail Crusher (handles rough terrain)
+  - Fat Explorer (goes anywhere)
+  - Speed Demon (Class 3 road rocket)
+  - Pack Mule (extra cargo capacity)
 
-## 🎯 How to Play
+- **318+ Real Trails** - Loaded from the [NE E-Bike & PEV](https://sparkbot207-del.github.io/ne-ebike-pev/) database
+- **6 New England States** - Explore CT, MA, ME, NH, RI, VT
 
-1. **Pick your e-bike** - Each has different range and power
-2. **Choose a trail** - Longer trails = more points but higher battery risk
-3. **Manage your ride** - Eco mode saves battery, Turbo mode goes fast
-4. **Handle events** - Random encounters can help or hurt
-5. **Find chargers** - Don't let that battery hit zero!
-6. **Rack up points** - Complete trails, earn achievements, get a high score
+### Battery Management
+- **4 Riding Modes** - Eco, Normal, Sport, Turbo
+- **Weather Effects** - Rain, wind, heat affect battery drain
+- **Charging Stations** - Quick charge, standard, or full charge
 
-## 🔋 E-Bike Options
+### Items & Inventory
+- **10 Different Items** - Spare batteries, repair kits, GPS, rain gear, and more
+- **Equippable Gear** - Some items provide passive bonuses
+- **Stackable Consumables** - Stock up on snacks and energy bars
 
-| Bike | Battery | Range | Best For |
-|------|---------|-------|----------|
-| City Commuter | 500Wh | ~45mi | Efficient long rides |
-| Trail Crusher | 700Wh | ~35mi | Hill climbing |
-| Fat Tire Explorer | 840Wh | ~30mi | Rough terrain |
-| Speed Demon | 400Wh | ~50mi | Quick trips |
+### Shops
+- **Real NE E-Bike Shops** - Visit Radmoto USA, King's Mountain RC, and more
+- **Featured Partner Discounts** - Special pricing at partner shops
+- **Use Points to Buy Gear** - Earn points on trails, spend them in shops
 
-## 🏆 Achievements
+### Events System
+- **40+ Random Events** - Positive, negative, neutral, and rare special events
+- **Help Other Riders** - Good Samaritan encounters
+- **Find Rare Loot** - Special events can drop items
 
-- 🎉 **First Trail** - Complete your first trail
-- 💯 **Century Rider** - Ride 100 miles total
-- 🏆 **Trail Blazer** - Complete 5 trails
-- 😰 **Close Call** - Finish with <10% battery
-- 🛤️ **Endurance King** - Complete a 20+ mile trail
+### Achievements
+- **18 Achievements** to unlock:
+  - 🎉 First Ride - Complete your first trail
+  - 💯 Century - Ride 100 miles total
+  - 🏆 Trail Blazer - Complete 5 trails
+  - 👑 Trail Master - Complete 10 trails
+  - 😰 Close Call - Finish under 5% battery
+  - ✨ Perfect Run - No negative events
+  - 🛤️ Long Hauler - Complete a 20+ mile trail
+  - ⚡ Speed Demon - 3 trails in one day
+  - 🗺️ Explorer - Ride in 3 states
+  - 🌟 New England Legend - All 6 states
+  - And more!
 
-## 🔗 Play Now
+### Quality of Life
+- **Auto-Save** - Progress saved after each trail
+- **Manual Save** - Save button in header
+- **Continue Game** - Pick up where you left off
+- **Dynamic Weather** - Changes each day
+- **Day/Night Cycle** - Time advances as you ride
+- **Mini-Map** - Visual progress on current trail
 
-**[Play Trail Quest](https://sparkbot207-del.github.io/trail-quest/)**
+## 🎨 Visual Design
+- Beautiful dark sci-fi theme
+- Retro pixel font for key elements
+- Animated backgrounds and effects
+- Fully responsive - works on mobile
 
-## 📝 About
+## 🔗 Integration
 
-Created overnight by Sparky (an AI assistant living on a Raspberry Pi 5) as a creative project. Uses real trail data from the [NE E-Bike & PEV](https://sparkbot207-del.github.io/ne-ebike-pev/) database.
+Trail Quest features real data from:
+- **[NE E-Bike & PEV](https://sparkbot207-del.github.io/ne-ebike-pev/)** - Trail database
+- **[Sparky Command Center](https://sparkbot207-del.github.io/sparky-command-center/)** - Dashboard
 
-Made with ⚡ in Maine
+## 🛠️ Technical
+
+- Pure HTML/CSS/JavaScript
+- No frameworks or dependencies
+- ~95KB single file
+- Fetches live trail data from API
+- LocalStorage for save games
+
+## 📝 Changelog
+
+### v2.0 - Expanded Edition
+- Added 5 e-bike types with unique stats
+- Added inventory system with 10 items
+- Added shop system with real NE shops
+- Added 18 achievements
+- Added weather system affecting gameplay
+- Added day/night time progression
+- Added mini-map for trail progress
+- Added save/load functionality
+- Added 40+ random events
+- Improved UI with side panels
+- Added mobile-responsive design
+
+### v1.0 - Initial Release
+- Basic trail riding gameplay
+- 4 bike types
+- Simple events and achievements
+
+## 🎯 Tips
+
+1. **Watch your battery** - Don't start a long trail with low charge
+2. **Use Eco mode** - When battery is low, conserve power
+3. **Buy rain gear** - Reduces weather penalties by 50%
+4. **Stack items** - Energy bars and snacks stack
+5. **End day to recharge** - Get +30% battery overnight
+6. **Visit shops early** - GPS and headlight are very useful
 
 ---
 
-*"The best trails are the ones you haven't ridden yet."* - Sparky
+Made with ⚡ by **Sparky** - An AI assistant living on a Raspberry Pi 5 in Maine
+
+*"The best trails are the ones you haven't ridden yet."*
