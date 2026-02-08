@@ -3,41 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trail Quest - E-Bike Adventure</title>
+    <title>Trail Quest</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ============================================
+           BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         :root {
-            --green: #00ff88;
-            --green-dark: #00cc6a;
-            --blue: #00ccff;
-            --orange: #ff9500;
-            --red: #ff4757;
-            --purple: #a855f7;
-            --dark: #0a0e14;
-            --darker: #060a0f;
-            --card: rgba(15, 25, 35, 0.95);
-            --card-hover: rgba(20, 35, 50, 0.95);
-            --border: rgba(0, 255, 136, 0.2);
+            --green: #10b981;
+            --green-light: #34d399;
+            --blue: #06b6d4;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #8b5cf6;
+            --dark: #0f172a;
+            --dark-lighter: #1e293b;
+            --dark-card: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --border: #334155;
         }
         
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background: var(--dark);
-            color: #fff;
+            color: var(--text);
             min-height: 100vh;
+            min-height: 100dvh;
             overflow: hidden;
-            touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
         
-        h1, h2, h3, .title {
+        h1, h2, h3, .font-display {
             font-family: 'Russo One', sans-serif;
         }
         
-        #game {
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        #app {
             width: 100vw;
             height: 100vh;
             height: 100dvh;
@@ -45,7 +65,6 @@
             overflow: hidden;
         }
         
-        /* ===== SCREENS ===== */
         .screen {
             position: absolute;
             inset: 0;
@@ -53,20 +72,130 @@
             flex-direction: column;
             background: var(--dark);
         }
-        .screen.active { display: flex; }
         
-        /* ===== TITLE SCREEN ===== */
-        #title-screen {
-            justify-content: center;
+        .screen.active {
+            display: flex;
+        }
+        
+        /* Screen header */
+        .screen-header {
+            display: flex;
             align-items: center;
-            text-align: center;
-            background: linear-gradient(180deg, #0d1a12 0%, var(--dark) 100%);
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--dark-lighter);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--text);
+            font-size: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .back-btn:active {
+            background: var(--border);
+        }
+        
+        .screen-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.2rem;
+            color: var(--green);
+        }
+        
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(245, 158, 11, 0.15);
+            border-radius: 20px;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        /* Screen content */
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
             padding: 20px;
         }
         
-        .title-bike {
-            width: 200px;
-            height: 120px;
+        /* Screen footer */
+        .screen-footer {
+            padding: 16px 20px;
+            background: var(--dark-lighter);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.1s, opacity 0.1s;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
+        }
+        
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .btn:disabled:active {
+            transform: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green), var(--green-light));
+            color: var(--dark);
+        }
+        
+        .btn-secondary {
+            background: var(--dark-card);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-secondary:active {
+            border-color: var(--green);
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* ============================================
+           TITLE SCREEN
+           ============================================ */
+        #screen-title {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(180deg, #0f2922 0%, var(--dark) 100%);
+        }
+        
+        .title-logo {
             margin-bottom: 20px;
         }
         
@@ -75,298 +204,143 @@
             background: linear-gradient(135deg, var(--green), var(--blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            background-clip: text;
+            margin-bottom: 8px;
         }
         
         .game-subtitle {
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 40px;
+            color: var(--text-dim);
             font-size: 1.1rem;
+            margin-bottom: 50px;
         }
         
-        .menu-buttons {
+        .title-buttons {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 14px;
             width: 100%;
-            max-width: 280px;
+            max-width: 300px;
         }
         
-        .menu-btn {
-            background: var(--card);
-            border: 2px solid var(--border);
-            color: #fff;
-            padding: 18px 30px;
-            font-size: 1.1rem;
-            font-family: 'Russo One', sans-serif;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .title-stats {
+            margin-top: 50px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .menu-btn:hover, .menu-btn:active {
-            background: var(--card-hover);
-            border-color: var(--green);
-            transform: scale(1.02);
-        }
-        .menu-btn.primary {
-            background: linear-gradient(135deg, var(--green), var(--green-dark));
-            border: none;
-            color: var(--dark);
+            gap: 40px;
         }
         
-        /* ===== GARAGE SCREEN ===== */
-        #garage-screen {
-            padding: 0;
-        }
-        
-        .screen-header {
-            background: var(--darker);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--green);
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px;
-        }
-        
-        .screen-title {
-            font-size: 1.3rem;
-            color: var(--green);
-        }
-        
-        .money-display {
-            background: rgba(0,0,0,0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            color: var(--orange);
-        }
-        
-        .garage-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        
-        /* Bike Display */
-        .bike-display {
-            background: linear-gradient(180deg, rgba(0,255,136,0.1) 0%, transparent 100%);
-            border-radius: 20px;
-            padding: 30px;
+        .title-stat {
             text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
         }
         
-        .bike-preview {
-            width: 250px;
-            height: 150px;
-            margin: 0 auto 20px;
-        }
-        
-        .bike-name {
-            font-size: 1.5rem;
+        .title-stat-value {
             font-family: 'Russo One', sans-serif;
-            margin-bottom: 5px;
-        }
-        
-        .bike-type {
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 15px;
-        }
-        
-        .bike-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        
-        .stat-item {
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-            border-radius: 10px;
-        }
-        
-        .stat-value {
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.5rem;
             color: var(--green);
         }
         
-        .stat-label {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.5);
+        .title-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
             text-transform: uppercase;
         }
         
-        /* Upgrade Categories */
-        .upgrade-section {
-            margin-bottom: 20px;
-        }
-        
-        .section-title {
-            font-size: 1rem;
-            color: var(--green);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .upgrade-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        .upgrade-card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 15px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .upgrade-card:active {
-            transform: scale(0.98);
-        }
-        .upgrade-card.owned {
-            border-color: var(--green);
-            opacity: 0.7;
-        }
-        .upgrade-card.locked {
-            opacity: 0.4;
-        }
-        
-        .upgrade-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-        }
-        
-        .upgrade-name {
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-        }
-        
-        .upgrade-effect {
-            font-size: 0.75rem;
-            color: var(--green);
-            margin-bottom: 8px;
-        }
-        
-        .upgrade-price {
-            font-size: 0.85rem;
-            color: var(--orange);
-            font-weight: 700;
-        }
-        
-        .upgrade-card.owned .upgrade-price {
-            color: var(--green);
-        }
-        
-        /* ===== BIKE SELECT ===== */
-        #bike-screen {
-            padding: 0;
-        }
-        
+        /* ============================================
+           BIKE SELECT SCREEN
+           ============================================ */
         .bike-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-            align-content: start;
+            gap: 14px;
         }
         
         .bike-card {
-            background: var(--card);
-            border-radius: 15px;
-            padding: 20px 15px;
+            background: var(--dark-card);
+            border-radius: 16px;
+            padding: 20px 16px;
             text-align: center;
             border: 2px solid transparent;
-            cursor: pointer;
             transition: all 0.2s;
         }
-        .bike-card:active { transform: scale(0.97); }
-        .bike-card.selected { border-color: var(--green); background: var(--card-hover); }
         
-        .bike-card-icon {
-            width: 80px;
-            height: 50px;
-            margin: 0 auto 10px;
+        .bike-card:active {
+            transform: scale(0.97);
+        }
+        
+        .bike-card.selected {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .bike-card.locked {
+            opacity: 0.6;
+        }
+        
+        .bike-card-image {
+            height: 60px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .bike-card-name {
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+        }
+        
+        .bike-card-type {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
         }
         
         .bike-card-stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
             font-size: 0.75rem;
-            color: rgba(255,255,255,0.6);
+            color: var(--text-dim);
         }
         
-        .bottom-bar {
-            background: var(--darker);
-            padding: 15px 20px;
-            border-top: 1px solid var(--border);
+        .bike-card-price {
+            margin-top: 10px;
+            font-weight: 700;
+            color: var(--orange);
         }
         
-        .action-btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--green), var(--green-dark));
-            border: none;
-            color: var(--dark);
-            padding: 16px;
-            font-size: 1.1rem;
-            font-family: 'Russo One', sans-serif;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .action-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .action-btn:not(:disabled):active {
-            transform: scale(0.98);
+        .bike-card.selected .bike-card-price,
+        .bike-card:not(.locked) .bike-card-price {
+            color: var(--green);
         }
         
-        /* ===== TRAIL SELECT ===== */
+        /* ============================================
+           TRAIL SELECT SCREEN
+           ============================================ */
         .trail-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .trail-card {
-            background: var(--card);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 15px;
-            cursor: pointer;
+            gap: 14px;
+            padding: 16px;
+            background: var(--dark-card);
+            border-radius: 14px;
             border: 2px solid transparent;
             transition: all 0.2s;
         }
-        .trail-card:active { transform: scale(0.98); }
-        .trail-card.selected { border-color: var(--green); }
+        
+        .trail-card:active {
+            transform: scale(0.98);
+        }
+        
+        .trail-card.selected {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+        }
         
         .trail-icon {
             width: 50px;
@@ -377,40 +351,178 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
+            flex-shrink: 0;
         }
         
-        .trail-info { flex: 1; }
-        .trail-name { font-weight: 700; margin-bottom: 3px; }
-        .trail-meta { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+        .trail-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .trail-name {
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .trail-meta {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
         
         .trail-length {
             text-align: right;
         }
+        
         .trail-miles {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.4rem;
             color: var(--green);
         }
+        
         .trail-unit {
             font-size: 0.7rem;
-            color: rgba(255,255,255,0.5);
+            color: var(--text-dim);
         }
         
-        /* ===== RIDE SCREEN ===== */
-        #ride-screen {
-            background: linear-gradient(180deg, #87CEEB 0%, #98D1DC 30%, #3d6b4f 60%, #2d4a3a 100%);
+        /* ============================================
+           GARAGE SCREEN
+           ============================================ */
+        .garage-bike {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, transparent 100%);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
         }
         
+        .garage-bike-image {
+            height: 100px;
+            margin-bottom: 16px;
+        }
+        
+        .garage-bike-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        
+        .garage-bike-type {
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        
+        .garage-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .garage-stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 8px;
+            border-radius: 10px;
+        }
+        
+        .garage-stat-value {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.3rem;
+            color: var(--green);
+        }
+        
+        .garage-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        
+        .upgrade-section {
+            margin-bottom: 24px;
+        }
+        
+        .upgrade-section-title {
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .upgrade-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .upgrade-card {
+            background: var(--dark-card);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .upgrade-card:active {
+            transform: scale(0.97);
+        }
+        
+        .upgrade-card.owned {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .upgrade-card.locked {
+            opacity: 0.4;
+        }
+        
+        .upgrade-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        
+        .upgrade-effect {
+            font-size: 0.7rem;
+            color: var(--green);
+            margin-bottom: 6px;
+        }
+        
+        .upgrade-price {
+            font-size: 0.8rem;
+            color: var(--orange);
+            font-weight: 700;
+        }
+        
+        .upgrade-card.owned .upgrade-price {
+            color: var(--green);
+        }
+        
+        /* ============================================
+           RIDE SCREEN
+           ============================================ */
+        #screen-ride {
+            background: linear-gradient(180deg, 
+                #7dd3fc 0%,      /* Sky blue */
+                #bae6fd 20%,     /* Light sky */
+                #4ade80 50%,     /* Green hills */
+                #22c55e 70%,     /* Darker green */
+                #16a34a 100%     /* Ground */
+            );
+        }
+        
+        /* HUD */
         .ride-hud {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            padding: 12px 15px;
+            padding: 14px 20px;
             display: flex;
             justify-content: space-between;
-            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
-            z-index: 50;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+            z-index: 100;
         }
         
         .hud-item {
@@ -419,7 +531,7 @@
         
         .hud-value {
             font-family: 'Russo One', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
         
         .hud-label {
@@ -428,12 +540,20 @@
             opacity: 0.7;
         }
         
-        .hud-battery { color: var(--green); }
-        .hud-battery.warning { color: var(--orange); }
-        .hud-battery.danger { color: var(--red); animation: pulse 1s infinite; }
+        .hud-battery {
+            color: var(--green);
+        }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
+        .hud-battery.warning {
+            color: var(--orange);
+        }
+        
+        .hud-battery.danger {
+            color: var(--red);
+            animation: blink 0.5s infinite;
+        }
+        
+        @keyframes blink {
             50% { opacity: 0.5; }
         }
         
@@ -441,216 +561,148 @@
         .ride-progress {
             position: absolute;
             top: 70px;
-            left: 15px;
-            right: 15px;
-            height: 6px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 3px;
-            z-index: 50;
+            left: 20px;
+            right: 20px;
+            height: 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 4px;
+            z-index: 100;
+            overflow: hidden;
         }
         
         .ride-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--green), var(--blue));
-            border-radius: 3px;
-            transition: width 0.3s;
-            box-shadow: 0 0 10px var(--green);
-        }
-        
-        .ride-progress-markers {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-        
-        .progress-marker {
-            position: absolute;
-            top: -8px;
-            width: 8px;
-            height: 22px;
-            background: rgba(255,255,255,0.3);
             border-radius: 4px;
-            transform: translateX(-50%);
+            width: 0%;
+            transition: width 0.3s ease-out;
         }
         
-        /* Mode indicator */
-        .mode-indicator {
+        /* Mode display */
+        .ride-mode {
             position: absolute;
-            top: 90px;
+            top: 92px;
             left: 50%;
             transform: translateX(-50%);
             padding: 6px 16px;
-            border-radius: 15px;
-            font-family: 'Russo One', sans-serif;
-            font-size: 0.9rem;
             background: rgba(0,0,0,0.6);
-            z-index: 50;
+            border-radius: 20px;
+            font-family: 'Russo One', sans-serif;
+            font-size: 0.85rem;
+            z-index: 100;
         }
         
-        /* Game canvas area */
-        .game-world {
+        /* Game world */
+        .ride-world {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 100px;
+            inset: 0;
+            bottom: 110px;
             overflow: hidden;
         }
         
-        /* Sky */
-        .sky {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 40%;
-        }
-        
+        /* Clouds */
         .cloud {
             position: absolute;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 50px;
-            animation: cloud-drift linear infinite;
-        }
-        
-        @keyframes cloud-drift {
-            from { transform: translateX(100vw); }
-            to { transform: translateX(-200px); }
         }
         
         /* Mountains */
-        .mountains {
-            position: absolute;
-            bottom: 45%;
-            left: 0;
-            right: 0;
-            height: 30%;
-        }
-        
         .mountain {
             position: absolute;
-            bottom: 0;
-            border-left: 60px solid transparent;
-            border-right: 60px solid transparent;
-            border-bottom: 100px solid #4a5568;
+            bottom: 50%;
+            width: 0;
+            height: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 120px solid #64748b;
+            opacity: 0.4;
         }
         
-        .mountain::after {
-            content: '';
-            position: absolute;
-            top: -80px;
-            left: -20px;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-bottom: 30px solid #fff;
-        }
-        
-        /* Ground & Trail */
-        .ground {
+        /* Ground */
+        .ride-ground {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 45%;
-            background: linear-gradient(180deg, #4a7c59 0%, #3d6b4f 30%, #2d5a40 100%);
+            height: 50%;
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
         }
         
-        .trail {
+        /* Trail */
+        .ride-trail {
             position: absolute;
             bottom: 15%;
             left: 0;
             right: 0;
-            height: 40px;
-            background: linear-gradient(180deg, #8B7355 0%, #6B5344 50%, #5a4636 100%);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            height: 45px;
+            background: linear-gradient(180deg, #a8a29e 0%, #78716c 100%);
         }
         
-        .trail::before {
+        .ride-trail::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 0;
             right: 0;
-            height: 2px;
-            background: repeating-linear-gradient(90deg, #9a8b7a 0px, #9a8b7a 20px, transparent 20px, transparent 40px);
-            animation: trail-move 0.5s linear infinite;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, 
+                #fef3c7 0px, #fef3c7 30px,
+                transparent 30px, transparent 60px
+            );
+            animation: trail-scroll 0.8s linear infinite;
         }
         
-        @keyframes trail-move {
+        @keyframes trail-scroll {
             from { transform: translateX(0); }
-            to { transform: translateX(-40px); }
+            to { transform: translateX(-60px); }
         }
         
         /* Trees */
-        .trees-layer {
-            position: absolute;
-            bottom: 35%;
-            left: 0;
-            right: 0;
-            height: 40%;
-            pointer-events: none;
-        }
-        
         .tree {
             position: absolute;
-            bottom: 0;
-            animation: tree-scroll linear infinite;
-        }
-        
-        @keyframes tree-scroll {
-            from { transform: translateX(100vw); }
-            to { transform: translateX(-100px); }
+            bottom: 40%;
         }
         
         /* Bike */
-        .bike-container {
+        .ride-bike {
             position: absolute;
-            bottom: calc(15% + 35px);
-            left: 20%;
-            z-index: 20;
-            transition: bottom 0.2s;
+            bottom: calc(15% + 40px);
+            left: 15%;
+            z-index: 50;
         }
         
-        .bike-container.jumping {
-            animation: bike-jump 0.4s ease-out;
+        .ride-bike.jumping {
+            animation: jump 0.35s ease-out;
         }
         
-        @keyframes bike-jump {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-30px); }
+        @keyframes jump {
+            50% { transform: translateY(-25px); }
         }
         
-        .bike-svg {
-            width: 120px;
-            height: 80px;
-        }
-        
-        .wheel {
-            animation: wheel-spin 0.5s linear infinite;
+        .wheel-spin {
+            animation: spin 0.4s linear infinite;
             transform-origin: center;
         }
         
-        @keyframes wheel-spin {
-            from { transform: rotate(0deg); }
+        @keyframes spin {
             to { transform: rotate(360deg); }
         }
         
         /* Speed display */
-        .speed-display {
+        .ride-speed {
             position: absolute;
-            bottom: 120px;
-            right: 15px;
+            bottom: 130px;
+            right: 20px;
             text-align: right;
-            z-index: 50;
+            z-index: 100;
         }
         
         .speed-value {
             font-family: 'Russo One', sans-serif;
             font-size: 3rem;
             line-height: 1;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
         }
         
         .speed-unit {
@@ -664,28 +716,27 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 100px;
-            background: var(--darker);
-            display: flex;
-            padding: 15px;
-            gap: 12px;
+            height: 110px;
+            background: var(--dark-lighter);
             border-top: 1px solid var(--border);
+            display: flex;
+            padding: 16px;
+            gap: 10px;
+            z-index: 100;
         }
         
         .mode-btn {
             flex: 1;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Russo One', sans-serif;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.15s;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 4px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.75rem;
             opacity: 0.5;
+            transition: all 0.15s;
             border: 2px solid transparent;
         }
         
@@ -700,137 +751,174 @@
         }
         
         .mode-btn-icon {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
         
-        .mode-eco { background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff; }
-        .mode-normal { background: linear-gradient(135deg, var(--blue), #0891b2); color: #fff; }
-        .mode-sport { background: linear-gradient(135deg, var(--orange), #ea580c); color: #fff; }
-        .mode-turbo { background: linear-gradient(135deg, var(--red), #dc2626); color: #fff; }
+        .mode-eco {
+            background: linear-gradient(180deg, #22c55e, #16a34a);
+            color: white;
+        }
         
-        /* Event Popup */
+        .mode-normal {
+            background: linear-gradient(180deg, #06b6d4, #0891b2);
+            color: white;
+        }
+        
+        .mode-sport {
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .mode-turbo {
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        /* Event overlay */
         .event-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.75);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 100;
-            padding: 20px;
+            z-index: 200;
+            padding: 30px;
         }
-        .event-overlay.show { display: flex; }
+        
+        .event-overlay.show {
+            display: flex;
+        }
         
         .event-popup {
-            background: var(--card);
-            border-radius: 20px;
+            background: var(--dark-card);
+            border-radius: 24px;
             padding: 30px;
             text-align: center;
             max-width: 320px;
+            width: 100%;
             border: 2px solid var(--green);
-            animation: popup-in 0.3s ease-out;
+            animation: pop-in 0.25s ease-out;
         }
         
-        @keyframes popup-in {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        @keyframes pop-in {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
         }
         
         .event-icon {
             font-size: 4rem;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
         .event-title {
             font-family: 'Russo One', sans-serif;
             font-size: 1.3rem;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .event-text {
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 15px;
-            line-height: 1.4;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            line-height: 1.5;
         }
         
         .event-effect {
             font-family: 'Russo One', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-bottom: 20px;
         }
-        .event-effect.good { color: var(--green); }
-        .event-effect.bad { color: var(--orange); }
         
-        .event-btn {
-            background: var(--green);
-            color: var(--dark);
-            border: none;
-            padding: 14px 40px;
-            font-family: 'Russo One', sans-serif;
-            font-size: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
+        .event-effect.positive {
+            color: var(--green);
         }
         
-        /* ===== RESULTS SCREEN ===== */
-        #results-screen {
+        .event-effect.negative {
+            color: var(--orange);
+        }
+        
+        .event-effect.neutral {
+            color: var(--text-dim);
+        }
+        
+        /* ============================================
+           RESULTS SCREEN
+           ============================================ */
+        #screen-results {
             justify-content: center;
             align-items: center;
             padding: 30px;
             text-align: center;
-            background: linear-gradient(180deg, #0d1a12 0%, var(--dark) 100%);
+            background: linear-gradient(180deg, #0f2922 0%, var(--dark) 100%);
         }
         
         .results-icon {
             font-size: 5rem;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         
         .results-title {
             font-family: 'Russo One', sans-serif;
             font-size: 2rem;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-        .results-title.success { color: var(--green); }
-        .results-title.failure { color: var(--orange); }
         
-        .results-subtitle {
-            color: rgba(255,255,255,0.6);
+        .results-title.success {
+            color: var(--green);
+        }
+        
+        .results-title.failure {
+            color: var(--orange);
+        }
+        
+        .results-trail {
+            color: var(--text-dim);
             margin-bottom: 30px;
         }
         
         .results-card {
-            background: var(--card);
-            border-radius: 15px;
+            background: var(--dark-card);
+            border-radius: 16px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             width: 100%;
             max-width: 320px;
         }
         
-        .result-row {
+        .results-row {
             display: flex;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid var(--border);
         }
-        .result-row:last-child { border: none; }
         
-        .result-label { color: rgba(255,255,255,0.7); }
-        .result-value { font-weight: 700; color: var(--green); }
+        .results-row:last-child {
+            border: none;
+        }
+        
+        .results-label {
+            color: var(--text-dim);
+        }
+        
+        .results-value {
+            font-weight: 700;
+            color: var(--green);
+        }
         
         .results-reward {
-            background: linear-gradient(135deg, rgba(255,149,0,0.2), rgba(255,149,0,0.1));
+            background: rgba(245, 158, 11, 0.15);
             border: 1px solid var(--orange);
-            border-radius: 10px;
-            padding: 12px 20px;
-            margin-bottom: 25px;
+            border-radius: 12px;
+            padding: 14px 24px;
+            margin-bottom: 30px;
         }
         
-        .reward-text {
-            color: var(--orange);
+        .results-reward-text {
             font-family: 'Russo One', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            color: var(--orange);
         }
         
         .results-buttons {
@@ -840,100 +928,128 @@
             max-width: 320px;
         }
         
-        .results-buttons .menu-btn {
+        .results-buttons .btn {
             flex: 1;
         }
     </style>
 </head>
 <body>
-    <div id="game">
-        <!-- ===== TITLE SCREEN ===== -->
-        <div id="title-screen" class="screen active">
-            <svg class="title-bike" viewBox="0 0 200 120">
-                <!-- E-Bike SVG -->
-                <g transform="translate(30, 20)">
-                    <!-- Rear Wheel -->
-                    <circle cx="25" cy="70" r="22" fill="none" stroke="#333" stroke-width="6"/>
-                    <circle cx="25" cy="70" r="22" fill="none" stroke="#555" stroke-width="3"/>
-                    <circle cx="25" cy="70" r="10" fill="#333"/>
-                    <!-- Front Wheel -->
-                    <circle cx="115" cy="70" r="22" fill="none" stroke="#333" stroke-width="6"/>
-                    <circle cx="115" cy="70" r="22" fill="none" stroke="#555" stroke-width="3"/>
-                    <circle cx="115" cy="70" r="10" fill="#333"/>
-                    <!-- Frame -->
-                    <path d="M25 70 L50 35 L95 35 L115 70" fill="none" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M50 35 L50 70 L25 70" fill="none" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M95 35 L80 70" fill="none" stroke="#e63946" stroke-width="5" stroke-linecap="round"/>
-                    <!-- Battery Pack -->
-                    <rect x="52" y="40" width="35" height="15" rx="3" fill="#1a1a2e"/>
-                    <rect x="54" y="42" width="10" height="11" rx="2" fill="#00ff88"/>
-                    <!-- Seat -->
-                    <ellipse cx="45" cy="30" rx="15" ry="5" fill="#1a1a2e"/>
-                    <!-- Handlebars -->
-                    <path d="M95 35 L105 25 L115 25" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>
-                    <!-- Motor Hub -->
-                    <circle cx="25" cy="70" r="8" fill="#1a1a2e" stroke="#00ff88" stroke-width="2"/>
-                </g>
-            </svg>
+    <div id="app">
+        <!-- ========== TITLE SCREEN ========== -->
+        <div id="screen-title" class="screen active">
+            <div class="title-logo">
+                <svg width="140" height="90" viewBox="0 0 140 90">
+                    <g transform="translate(10, 5)">
+                        <!-- Rear wheel -->
+                        <circle cx="25" cy="60" r="20" fill="none" stroke="#334155" stroke-width="5"/>
+                        <circle cx="25" cy="60" r="8" fill="#334155"/>
+                        <!-- Front wheel -->
+                        <circle cx="95" cy="60" r="20" fill="none" stroke="#334155" stroke-width="5"/>
+                        <circle cx="95" cy="60" r="8" fill="#334155"/>
+                        <!-- Frame -->
+                        <path d="M25 60 L45 30 L80 30 L95 60" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M45 30 L45 60 L25 60" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M80 30 L65 60" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
+                        <!-- Battery -->
+                        <rect x="48" y="34" width="28" height="12" rx="2" fill="#1e293b"/>
+                        <rect x="50" y="36" width="8" height="8" rx="1" fill="#10b981"/>
+                        <!-- Seat -->
+                        <ellipse cx="42" cy="25" rx="12" ry="4" fill="#1e293b"/>
+                        <!-- Handlebars -->
+                        <path d="M80 30 L88 22 L98 20" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Motor indicator -->
+                        <circle cx="25" cy="60" r="6" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+                    </g>
+                </svg>
+            </div>
             <h1 class="game-title">TRAIL QUEST</h1>
             <p class="game-subtitle">New England E-Bike Adventure</p>
-            <div class="menu-buttons">
-                <button class="menu-btn primary" onclick="showScreen('bike-screen')">
-                    <span>⚡</span> START RIDE
+            
+            <div class="title-buttons">
+                <button class="btn btn-primary btn-block" onclick="Game.showScreen('bikes')">
+                    ⚡ Start Ride
                 </button>
-                <button class="menu-btn" onclick="showScreen('garage-screen')">
-                    <span>🔧</span> GARAGE
+                <button class="btn btn-secondary btn-block" onclick="Game.showScreen('garage')">
+                    🔧 Garage
+                </button>
+            </div>
+            
+            <div class="title-stats">
+                <div class="title-stat">
+                    <div class="title-stat-value" id="stat-miles">0</div>
+                    <div class="title-stat-label">Miles</div>
+                </div>
+                <div class="title-stat">
+                    <div class="title-stat-value" id="stat-rides">0</div>
+                    <div class="title-stat-label">Rides</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== BIKE SELECT SCREEN ========== -->
+        <div id="screen-bikes" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="Game.showScreen('title')">←</button>
+                <span class="screen-title">SELECT BIKE</span>
+                <div class="header-info">
+                    <span>$</span><span id="bikes-money">0</span>
+                </div>
+            </div>
+            <div class="screen-content">
+                <div class="bike-grid" id="bike-grid">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            <div class="screen-footer">
+                <button class="btn btn-primary btn-block" id="btn-bikes-next" onclick="Game.showScreen('trails')" disabled>
+                    Select a Bike
                 </button>
             </div>
         </div>
         
-        <!-- ===== GARAGE SCREEN ===== -->
-        <div id="garage-screen" class="screen">
+        <!-- ========== TRAIL SELECT SCREEN ========== -->
+        <div id="screen-trails" class="screen">
             <div class="screen-header">
-                <button class="back-btn" onclick="showScreen('title-screen')">←</button>
-                <span class="screen-title">GARAGE</span>
-                <div class="money-display">$<span id="garage-money">0</span></div>
+                <button class="back-btn" onclick="Game.showScreen('bikes')">←</button>
+                <span class="screen-title">SELECT TRAIL</span>
+                <div style="width: 40px;"></div>
             </div>
-            <div class="garage-content" id="garage-content">
+            <div class="screen-content">
+                <div class="trail-list" id="trail-list">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            <div class="screen-footer">
+                <button class="btn btn-primary btn-block" id="btn-trails-next" onclick="Game.startRide()" disabled>
+                    Select a Trail
+                </button>
+            </div>
+        </div>
+        
+        <!-- ========== GARAGE SCREEN ========== -->
+        <div id="screen-garage" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="Game.showScreen('title')">←</button>
+                <span class="screen-title">GARAGE</span>
+                <div class="header-info">
+                    <span>$</span><span id="garage-money">0</span>
+                </div>
+            </div>
+            <div class="screen-content" id="garage-content">
                 <!-- Filled by JS -->
             </div>
         </div>
         
-        <!-- ===== BIKE SELECT ===== -->
-        <div id="bike-screen" class="screen">
-            <div class="screen-header">
-                <button class="back-btn" onclick="showScreen('title-screen')">←</button>
-                <span class="screen-title">SELECT BIKE</span>
-                <div class="money-display">$<span id="bike-money">0</span></div>
-            </div>
-            <div class="bike-grid" id="bike-grid"></div>
-            <div class="bottom-bar">
-                <button class="action-btn" id="bike-continue" onclick="showScreen('trail-screen')" disabled>SELECT BIKE</button>
-            </div>
-        </div>
-        
-        <!-- ===== TRAIL SELECT ===== -->
-        <div id="trail-screen" class="screen">
-            <div class="screen-header">
-                <button class="back-btn" onclick="showScreen('bike-screen')">←</button>
-                <span class="screen-title">SELECT TRAIL</span>
-                <div style="width: 50px;"></div>
-            </div>
-            <div class="trail-list" id="trail-list"></div>
-            <div class="bottom-bar">
-                <button class="action-btn" id="trail-continue" onclick="startRide()" disabled>LET'S RIDE</button>
-            </div>
-        </div>
-        
-        <!-- ===== RIDE SCREEN ===== -->
-        <div id="ride-screen" class="screen">
+        <!-- ========== RIDE SCREEN ========== -->
+        <div id="screen-ride" class="screen">
+            <!-- HUD -->
             <div class="ride-hud">
                 <div class="hud-item">
                     <div class="hud-value hud-battery" id="hud-battery">100%</div>
                     <div class="hud-label">Battery</div>
                 </div>
                 <div class="hud-item">
-                    <div class="hud-value" id="hud-miles">0.0 mi</div>
+                    <div class="hud-value" id="hud-distance">0.0 mi</div>
                     <div class="hud-label">Distance</div>
                 </div>
                 <div class="hud-item">
@@ -942,730 +1058,856 @@
                 </div>
             </div>
             
+            <!-- Progress -->
             <div class="ride-progress">
-                <div class="ride-progress-fill" id="progress-fill"></div>
+                <div class="ride-progress-fill" id="ride-progress"></div>
             </div>
             
-            <div class="mode-indicator" id="mode-indicator">🌱 ECO</div>
+            <!-- Mode indicator -->
+            <div class="ride-mode" id="ride-mode">🌱 ECO</div>
             
-            <div class="game-world" id="game-world">
-                <div class="sky" id="sky"></div>
-                <div class="mountains" id="mountains"></div>
-                <div class="trees-layer" id="trees"></div>
-                <div class="ground"></div>
-                <div class="trail"></div>
-                <div class="bike-container" id="bike-container">
-                    <svg class="bike-svg" viewBox="0 0 120 80">
+            <!-- Game world -->
+            <div class="ride-world" id="ride-world">
+                <div class="ride-ground"></div>
+                <div class="ride-trail"></div>
+                <div class="ride-bike" id="ride-bike">
+                    <svg width="100" height="65" viewBox="0 0 100 65">
                         <g>
-                            <!-- Rear Wheel -->
-                            <g class="wheel">
-                                <circle cx="22" cy="55" r="18" fill="none" stroke="#333" stroke-width="5"/>
-                                <circle cx="22" cy="55" r="18" fill="none" stroke="#666" stroke-width="2"/>
-                                <circle cx="22" cy="55" r="6" fill="#333"/>
-                                <line x1="22" y1="37" x2="22" y2="43" stroke="#888" stroke-width="2"/>
-                                <line x1="22" y1="67" x2="22" y2="73" stroke="#888" stroke-width="2"/>
-                                <line x1="4" y1="55" x2="10" y2="55" stroke="#888" stroke-width="2"/>
-                                <line x1="34" y1="55" x2="40" y2="55" stroke="#888" stroke-width="2"/>
+                            <!-- Rear wheel -->
+                            <g class="wheel-spin" style="transform-origin: 18px 45px;">
+                                <circle cx="18" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                                <circle cx="18" cy="45" r="5" fill="#334155"/>
+                                <line x1="18" y1="31" x2="18" y2="36" stroke="#64748b" stroke-width="2"/>
+                                <line x1="18" y1="54" x2="18" y2="59" stroke="#64748b" stroke-width="2"/>
+                                <line x1="4" y1="45" x2="9" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <line x1="27" y1="45" x2="32" y2="45" stroke="#64748b" stroke-width="2"/>
                             </g>
-                            <!-- Front Wheel -->
-                            <g class="wheel">
-                                <circle cx="88" cy="55" r="18" fill="none" stroke="#333" stroke-width="5"/>
-                                <circle cx="88" cy="55" r="18" fill="none" stroke="#666" stroke-width="2"/>
-                                <circle cx="88" cy="55" r="6" fill="#333"/>
-                                <line x1="88" y1="37" x2="88" y2="43" stroke="#888" stroke-width="2"/>
-                                <line x1="88" y1="67" x2="88" y2="73" stroke="#888" stroke-width="2"/>
-                                <line x1="70" y1="55" x2="76" y2="55" stroke="#888" stroke-width="2"/>
-                                <line x1="100" y1="55" x2="106" y2="55" stroke="#888" stroke-width="2"/>
+                            <!-- Front wheel -->
+                            <g class="wheel-spin" style="transform-origin: 72px 45px;">
+                                <circle cx="72" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                                <circle cx="72" cy="45" r="5" fill="#334155"/>
+                                <line x1="72" y1="31" x2="72" y2="36" stroke="#64748b" stroke-width="2"/>
+                                <line x1="72" y1="54" x2="72" y2="59" stroke="#64748b" stroke-width="2"/>
+                                <line x1="58" y1="45" x2="63" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <line x1="81" y1="45" x2="86" y2="45" stroke="#64748b" stroke-width="2"/>
                             </g>
                             <!-- Frame -->
-                            <path d="M22 55 L40 28 L75 28 L88 55" fill="none" stroke="#e63946" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M40 28 L40 55 L22 55" fill="none" stroke="#e63946" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M75 28 L62 55" fill="none" stroke="#e63946" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M18 45 L32 22 L60 22 L72 45" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M32 22 L32 45 L18 45" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M60 22 L50 45" fill="none" stroke="#10b981" stroke-width="4"/>
                             <!-- Battery -->
-                            <rect x="42" y="32" width="28" height="12" rx="2" fill="#1a1a2e" stroke="#333"/>
-                            <rect x="44" y="34" width="8" height="8" rx="1" fill="#00ff88" id="bike-battery-indicator"/>
+                            <rect x="35" y="25" width="22" height="10" rx="2" fill="#1e293b"/>
+                            <rect x="37" y="27" width="6" height="6" rx="1" fill="#10b981" id="bike-battery-fill"/>
                             <!-- Seat -->
-                            <ellipse cx="38" cy="23" rx="12" ry="4" fill="#1a1a2e"/>
+                            <ellipse cx="30" cy="18" rx="10" ry="3" fill="#1e293b"/>
                             <!-- Handlebars -->
-                            <path d="M75 28 L82 20 L92 18" fill="none" stroke="#444" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M60 22 L68 15 L78 13" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
                             <!-- Motor -->
-                            <circle cx="22" cy="55" r="7" fill="#1a1a2e" stroke="#00ff88" stroke-width="1.5"/>
-                            <text x="22" y="58" text-anchor="middle" fill="#00ff88" font-size="6" font-weight="bold">M</text>
+                            <circle cx="18" cy="45" r="5" fill="#1e293b" stroke="#10b981" stroke-width="1"/>
                             <!-- Headlight -->
-                            <circle cx="95" cy="22" r="4" fill="#ffeb3b"/>
+                            <circle cx="80" cy="16" r="3" fill="#fef08a"/>
                         </g>
                     </svg>
                 </div>
             </div>
             
-            <div class="speed-display">
-                <div class="speed-value" id="speed-value">0</div>
+            <!-- Speed -->
+            <div class="ride-speed">
+                <div class="speed-value" id="ride-speed">0</div>
                 <div class="speed-unit">MPH</div>
             </div>
             
+            <!-- Controls -->
             <div class="ride-controls">
-                <button class="mode-btn mode-eco active" onclick="setMode('eco')">
+                <button class="mode-btn mode-eco active" data-mode="eco" onclick="Game.setMode('eco')">
                     <span class="mode-btn-icon">🌱</span>
                     <span>ECO</span>
                 </button>
-                <button class="mode-btn mode-normal" onclick="setMode('normal')">
+                <button class="mode-btn mode-normal" data-mode="normal" onclick="Game.setMode('normal')">
                     <span class="mode-btn-icon">🚴</span>
                     <span>NORMAL</span>
                 </button>
-                <button class="mode-btn mode-sport" onclick="setMode('sport')">
+                <button class="mode-btn mode-sport" data-mode="sport" onclick="Game.setMode('sport')">
                     <span class="mode-btn-icon">⚡</span>
                     <span>SPORT</span>
                 </button>
-                <button class="mode-btn mode-turbo" onclick="setMode('turbo')">
+                <button class="mode-btn mode-turbo" data-mode="turbo" onclick="Game.setMode('turbo')">
                     <span class="mode-btn-icon">🚀</span>
                     <span>TURBO</span>
                 </button>
             </div>
             
+            <!-- Event popup -->
             <div class="event-overlay" id="event-overlay">
                 <div class="event-popup">
                     <div class="event-icon" id="event-icon">🦌</div>
                     <div class="event-title" id="event-title">Wildlife!</div>
-                    <div class="event-text" id="event-text">A deer crosses your path!</div>
-                    <div class="event-effect good" id="event-effect">+5% Battery</div>
-                    <button class="event-btn" onclick="closeEvent()">Continue</button>
+                    <div class="event-text" id="event-text">A deer crosses the trail ahead.</div>
+                    <div class="event-effect positive" id="event-effect">+5% Battery</div>
+                    <button class="btn btn-primary" onclick="Game.closeEvent()">Continue</button>
                 </div>
             </div>
         </div>
         
-        <!-- ===== RESULTS SCREEN ===== -->
-        <div id="results-screen" class="screen">
+        <!-- ========== RESULTS SCREEN ========== -->
+        <div id="screen-results" class="screen">
             <div class="results-icon" id="results-icon">🏆</div>
             <h2 class="results-title success" id="results-title">Trail Complete!</h2>
-            <p class="results-subtitle" id="results-subtitle">Great ride!</p>
+            <p class="results-trail" id="results-trail">East Bay Bike Path</p>
+            
             <div class="results-card">
-                <div class="result-row">
-                    <span class="result-label">Distance</span>
-                    <span class="result-value" id="result-distance">0 mi</span>
+                <div class="results-row">
+                    <span class="results-label">Distance</span>
+                    <span class="results-value" id="results-distance">0 mi</span>
                 </div>
-                <div class="result-row">
-                    <span class="result-label">Time</span>
-                    <span class="result-value" id="result-time">0:00</span>
+                <div class="results-row">
+                    <span class="results-label">Time</span>
+                    <span class="results-value" id="results-time">0:00</span>
                 </div>
-                <div class="result-row">
-                    <span class="result-label">Top Speed</span>
-                    <span class="result-value" id="result-speed">0 mph</span>
+                <div class="results-row">
+                    <span class="results-label">Top Speed</span>
+                    <span class="results-value" id="results-speed">0 mph</span>
                 </div>
-                <div class="result-row">
-                    <span class="result-label">Battery Left</span>
-                    <span class="result-value" id="result-battery">0%</span>
+                <div class="results-row">
+                    <span class="results-label">Battery Left</span>
+                    <span class="results-value" id="results-battery">0%</span>
                 </div>
             </div>
+            
             <div class="results-reward" id="results-reward">
-                <span class="reward-text">+$150 earned!</span>
+                <span class="results-reward-text">+$0 Earned!</span>
             </div>
+            
             <div class="results-buttons">
-                <button class="menu-btn" onclick="showScreen('title-screen')">Menu</button>
-                <button class="menu-btn primary" onclick="showScreen('trail-screen')">Ride Again</button>
+                <button class="btn btn-secondary" onclick="Game.showScreen('title')">Menu</button>
+                <button class="btn btn-primary" onclick="Game.showScreen('trails')">Ride Again</button>
             </div>
         </div>
     </div>
 
     <script>
     // ================================================================
-    // TRAIL QUEST - E-Bike Adventure Game
-    // By Sparky ⚡
+    // TRAIL QUEST - Game Engine
+    // Clean, tested, polished
     // ================================================================
     
-    // ===== GAME DATA =====
-    const BIKES = [
-        { 
-            id: 'revv1', 
-            name: 'Revv1 DRT', 
-            type: 'Dual Sport',
-            speed: 40, 
-            range: 50, 
-            accel: 7,
-            price: 0,
-            color: '#e63946',
-            owned: true,
-            desc: 'Great all-rounder'
-        },
-        { 
-            id: 'super73', 
-            name: 'Super 73 RX', 
-            type: 'Cafe Racer',
-            speed: 35, 
-            range: 60, 
-            accel: 6,
-            price: 500,
-            color: '#457b9d',
-            owned: false,
-            desc: 'Style + Range'
-        },
-        { 
-            id: 'surron', 
-            name: 'Sur-Ron Ultra', 
-            type: 'MX Style',
-            speed: 55, 
-            range: 45, 
-            accel: 9,
-            price: 1500,
-            color: '#f4a261',
-            owned: false,
-            desc: 'Fast & Agile'
-        },
-        { 
-            id: 'onyx', 
-            name: 'ONYX RCR', 
-            type: 'Speed Demon',
-            speed: 65, 
-            range: 40, 
-            accel: 10,
-            price: 2500,
-            color: '#2a9d8f',
-            owned: false,
-            desc: 'Maximum Speed'
-        }
-    ];
-    
-    const TRAILS = [
-        { name: 'East Bay Bike Path', length: 14, state: 'Rhode Island', icon: '🌊', surface: 'Paved', difficulty: 'easy' },
-        { name: 'Minuteman Bikeway', length: 11, state: 'Massachusetts', icon: '🏛️', surface: 'Paved', difficulty: 'easy' },
-        { name: 'Cape Cod Rail Trail', length: 26, state: 'Massachusetts', icon: '🌲', surface: 'Paved', difficulty: 'moderate' },
-        { name: 'Burlington Greenway', length: 13, state: 'Vermont', icon: '⛵', surface: 'Paved', difficulty: 'easy' },
-        { name: 'Eastern Trail', length: 29, state: 'Maine', icon: '🦞', surface: 'Mixed', difficulty: 'moderate' },
-        { name: 'Airline State Park', length: 50, state: 'Connecticut', icon: '✈️', surface: 'Crushed Stone', difficulty: 'hard' }
-    ];
-    
-    const UPGRADES = {
-        battery: [
-            { id: 'bat1', name: '52V 20Ah', effect: '+10 Range', range: 10, price: 300 },
-            { id: 'bat2', name: '72V 30Ah', effect: '+25 Range', range: 25, price: 800 },
-            { id: 'bat3', name: '72V 40Ah', effect: '+40 Range', range: 40, price: 1500 }
-        ],
-        motor: [
-            { id: 'mot1', name: 'Hub 1500W', effect: '+5 Speed', speed: 5, price: 400 },
-            { id: 'mot2', name: 'QS205 3kW', effect: '+15 Speed', speed: 15, price: 1200 },
-            { id: 'mot3', name: 'QS205 5kW', effect: '+25 Speed', speed: 25, price: 2000 }
-        ],
-        controller: [
-            { id: 'ctrl1', name: 'Basic 50A', effect: '+1 Accel', accel: 1, price: 200 },
-            { id: 'ctrl2', name: 'Fardriver ND72', effect: '+3 Accel', accel: 3, price: 600 },
-            { id: 'ctrl3', name: 'Fardriver ND84', effect: '+5 Accel', accel: 5, price: 1000 }
-        ]
-    };
-    
-    const EVENTS = [
-        { icon: '🦌', title: 'Wildlife!', text: 'A deer watches you pass by.', battery: 0 },
-        { icon: '🚧', title: 'Detour', text: 'Trail construction ahead - rough path!', battery: -8 },
-        { icon: '💨', title: 'Headwind', text: 'Strong wind slows you down.', battery: -5 },
-        { icon: '☀️', title: 'Perfect Day', text: 'Ideal riding conditions!', battery: 3 },
-        { icon: '🧑‍🤝‍🧑', title: 'Fellow Rider', text: 'They share a portable charger!', battery: 10 },
-        { icon: '🌧️', title: 'Rain', text: 'Sudden shower - traction reduced.', battery: -6 },
-        { icon: '⬇️', title: 'Downhill', text: 'Regen braking kicks in!', battery: 8 },
-        { icon: '⛰️', title: 'Hill Climb', text: 'Steep grade ahead!', battery: -12 },
-        { icon: '☕', title: 'Trail Cafe', text: 'Quick stop to top off!', battery: 15 },
-        { icon: '🌈', title: 'Rainbow', text: 'Beautiful view after the rain!', battery: 2 },
-        { icon: '🛞', title: 'Flat Tire', text: 'Patch kit saves the day, but costs time.', battery: -4 },
-        { icon: '🎉', title: 'Trail Festival', text: 'Free snacks and good vibes!', battery: 5 }
-    ];
-    
-    // ===== GAME STATE =====
-    let player = {
-        money: 500,
-        ownedBikes: ['revv1'],
-        ownedUpgrades: [],
-        selectedBike: null,
-        totalMiles: 0,
-        totalRides: 0
-    };
-    
-    let game = {
-        bike: null,
-        trail: null,
-        battery: 100,
-        miles: 0,
-        time: 0,
-        speed: 0,
-        mode: 'eco',
-        topSpeed: 0,
-        running: false,
-        paused: false
-    };
-    
-    let loops = {
-        game: null,
-        trees: null,
-        clouds: null
-    };
-    
-    // ===== INITIALIZATION =====
-    function init() {
-        loadPlayer();
-        renderBikes();
-        renderTrails();
-        renderGarage();
-        spawnClouds();
-        spawnMountains();
-    }
-    
-    function loadPlayer() {
-        const saved = localStorage.getItem('trailquest_player');
-        if (saved) {
-            const data = JSON.parse(saved);
-            player = { ...player, ...data };
-        }
-    }
-    
-    function savePlayer() {
-        localStorage.setItem('trailquest_player', JSON.stringify(player));
-    }
-    
-    // ===== SCREENS =====
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+    const Game = (function() {
+        'use strict';
         
-        if (id === 'garage-screen') renderGarage();
-        if (id === 'bike-screen') {
-            renderBikes();
-            document.getElementById('bike-money').textContent = player.money;
-        }
-    }
-    
-    // ===== GARAGE =====
-    function renderGarage() {
-        document.getElementById('garage-money').textContent = player.money;
-        
-        const bike = BIKES.find(b => b.id === (player.selectedBike || 'revv1'));
-        const bonuses = calculateBonuses();
-        
-        let html = `
-            <div class="bike-display">
-                ${renderBikeSVG(bike.color, 250, 150)}
-                <div class="bike-name">${bike.name}</div>
-                <div class="bike-type">${bike.type}</div>
-                <div class="bike-stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value">${bike.speed + bonuses.speed}</div>
-                        <div class="stat-label">Speed</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">${bike.range + bonuses.range}</div>
-                        <div class="stat-label">Range</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">${bike.accel + bonuses.accel}</div>
-                        <div class="stat-label">Accel</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">${player.totalMiles}</div>
-                        <div class="stat-label">Total Mi</div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        // Upgrade sections
-        const sections = [
-            { key: 'battery', icon: '🔋', title: 'Battery' },
-            { key: 'motor', icon: '⚙️', title: 'Motor' },
-            { key: 'controller', icon: '🎛️', title: 'Controller' }
+        // ========== GAME DATA ==========
+        const BIKES = [
+            { id: 'revv1', name: 'Revv1 DRT', type: 'Dual Sport', speed: 40, range: 50, accel: 7, price: 0, color: '#10b981' },
+            { id: 'super73', name: 'Super 73 RX', type: 'Cafe Racer', speed: 35, range: 65, accel: 6, price: 600, color: '#3b82f6' },
+            { id: 'surron', name: 'Sur-Ron Ultra', type: 'MX Style', speed: 55, range: 45, accel: 9, price: 1800, color: '#f59e0b' },
+            { id: 'onyx', name: 'ONYX RCR', type: 'Speed Demon', speed: 70, range: 40, accel: 10, price: 3000, color: '#8b5cf6' }
         ];
         
-        sections.forEach(section => {
-            html += `
-                <div class="upgrade-section">
-                    <div class="section-title">${section.icon} ${section.title}</div>
-                    <div class="upgrade-grid">
-                        ${UPGRADES[section.key].map(upgrade => {
-                            const owned = player.ownedUpgrades.includes(upgrade.id);
-                            const canAfford = player.money >= upgrade.price;
-                            return `
-                                <div class="upgrade-card ${owned ? 'owned' : ''} ${!owned && !canAfford ? 'locked' : ''}"
-                                     onclick="${owned ? '' : canAfford ? `buyUpgrade('${upgrade.id}', ${upgrade.price})` : ''}">
-                                    <div class="upgrade-name">${upgrade.name}</div>
-                                    <div class="upgrade-effect">${upgrade.effect}</div>
-                                    <div class="upgrade-price">${owned ? '✓ Owned' : '$' + upgrade.price}</div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-            `;
-        });
+        const TRAILS = [
+            { name: 'East Bay Bike Path', state: 'Rhode Island', length: 14, icon: '🌊', surface: 'Paved' },
+            { name: 'Minuteman Bikeway', state: 'Massachusetts', length: 11, icon: '🏛️', surface: 'Paved' },
+            { name: 'Cape Cod Rail Trail', state: 'Massachusetts', length: 26, icon: '🌲', surface: 'Paved' },
+            { name: 'Burlington Greenway', state: 'Vermont', length: 13, icon: '⛵', surface: 'Paved' },
+            { name: 'Eastern Trail', state: 'Maine', length: 29, icon: '🦞', surface: 'Mixed' },
+            { name: 'Airline State Park', state: 'Connecticut', length: 50, icon: '✈️', surface: 'Crushed Stone' }
+        ];
         
-        document.getElementById('garage-content').innerHTML = html;
-    }
-    
-    function calculateBonuses() {
-        let bonuses = { speed: 0, range: 0, accel: 0 };
-        
-        Object.values(UPGRADES).flat().forEach(upgrade => {
-            if (player.ownedUpgrades.includes(upgrade.id)) {
-                if (upgrade.speed) bonuses.speed += upgrade.speed;
-                if (upgrade.range) bonuses.range += upgrade.range;
-                if (upgrade.accel) bonuses.accel += upgrade.accel;
-            }
-        });
-        
-        return bonuses;
-    }
-    
-    function buyUpgrade(id, price) {
-        if (player.money < price || player.ownedUpgrades.includes(id)) return;
-        
-        player.money -= price;
-        player.ownedUpgrades.push(id);
-        savePlayer();
-        renderGarage();
-    }
-    
-    // ===== BIKE SELECT =====
-    function renderBikes() {
-        const grid = document.getElementById('bike-grid');
-        grid.innerHTML = BIKES.map(bike => {
-            const owned = player.ownedBikes.includes(bike.id);
-            const selected = player.selectedBike === bike.id;
-            return `
-                <div class="bike-card ${selected ? 'selected' : ''} ${!owned ? 'locked' : ''}" 
-                     onclick="selectBike('${bike.id}')">
-                    ${renderBikeSVG(bike.color, 80, 50)}
-                    <div class="bike-card-name">${bike.name}</div>
-                    <div class="bike-card-stats">
-                        ${owned ? `${bike.speed}mph • ${bike.range}mi` : `$${bike.price}`}
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    
-    function renderBikeSVG(color, width, height) {
-        return `
-            <svg class="bike-card-icon" viewBox="0 0 120 80" width="${width}" height="${height}">
-                <circle cx="22" cy="55" r="16" fill="none" stroke="#333" stroke-width="4"/>
-                <circle cx="88" cy="55" r="16" fill="none" stroke="#333" stroke-width="4"/>
-                <path d="M22 55 L40 30 L75 30 L88 55" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round"/>
-                <path d="M40 30 L40 55 L22 55" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round"/>
-                <path d="M75 30 L62 55" fill="none" stroke="${color}" stroke-width="4"/>
-                <rect x="42" y="33" width="26" height="10" rx="2" fill="#1a1a2e"/>
-                <ellipse cx="38" cy="26" rx="10" ry="3" fill="#1a1a2e"/>
-            </svg>
-        `;
-    }
-    
-    function selectBike(id) {
-        const bike = BIKES.find(b => b.id === id);
-        const owned = player.ownedBikes.includes(id);
-        
-        if (!owned) {
-            if (player.money >= bike.price) {
-                if (confirm(`Buy ${bike.name} for $${bike.price}?`)) {
-                    player.money -= bike.price;
-                    player.ownedBikes.push(id);
-                    savePlayer();
-                }
-            }
-            renderBikes();
-            document.getElementById('bike-money').textContent = player.money;
-            return;
-        }
-        
-        player.selectedBike = id;
-        game.bike = { ...bike, ...calculateBonuses() };
-        game.bike.speed += calculateBonuses().speed;
-        game.bike.range += calculateBonuses().range;
-        game.bike.accel += calculateBonuses().accel;
-        
-        savePlayer();
-        renderBikes();
-        document.getElementById('bike-continue').disabled = false;
-    }
-    
-    // ===== TRAIL SELECT =====
-    function renderTrails() {
-        const list = document.getElementById('trail-list');
-        list.innerHTML = TRAILS.map((trail, i) => `
-            <div class="trail-card" onclick="selectTrail(${i})">
-                <div class="trail-icon">${trail.icon}</div>
-                <div class="trail-info">
-                    <div class="trail-name">${trail.name}</div>
-                    <div class="trail-meta">${trail.state} • ${trail.surface}</div>
-                </div>
-                <div class="trail-length">
-                    <div class="trail-miles">${trail.length}</div>
-                    <div class="trail-unit">miles</div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    function selectTrail(idx) {
-        game.trail = TRAILS[idx];
-        document.querySelectorAll('.trail-card').forEach((c, i) => {
-            c.classList.toggle('selected', i === idx);
-        });
-        document.getElementById('trail-continue').disabled = false;
-    }
-    
-    // ===== RIDE =====
-    function startRide() {
-        if (!game.bike) {
-            game.bike = BIKES[0];
-        }
-        
-        game.battery = 100;
-        game.miles = 0;
-        game.time = 0;
-        game.speed = 0;
-        game.topSpeed = 0;
-        game.mode = 'eco';
-        game.running = true;
-        game.paused = false;
-        
-        showScreen('ride-screen');
-        setMode('eco');
-        startGameLoop();
-        startScenery();
-    }
-    
-    function startGameLoop() {
-        loops.game = setInterval(() => {
-            if (game.paused || !game.running) return;
-            
-            // Target speed based on mode
-            const speedMult = { eco: 0.4, normal: 0.6, sport: 0.8, turbo: 1.0 };
-            const targetSpeed = game.bike.speed * speedMult[game.mode];
-            
-            // Accelerate towards target
-            const accelRate = 0.5 + (game.bike.accel * 0.1);
-            if (game.speed < targetSpeed) {
-                game.speed = Math.min(targetSpeed, game.speed + accelRate);
-            } else {
-                game.speed = Math.max(targetSpeed, game.speed - accelRate * 0.5);
-            }
-            
-            if (game.speed > game.topSpeed) game.topSpeed = game.speed;
-            
-            // Distance
-            game.miles += game.speed / 36000;
-            
-            // Battery drain
-            const drainMult = { eco: 0.008, normal: 0.015, sport: 0.025, turbo: 0.04 };
-            const baseDrain = drainMult[game.mode];
-            const rangeFactor = 50 / game.bike.range;
-            game.battery -= baseDrain * rangeFactor;
-            
-            // Time
-            game.time += 0.1;
-            
-            // Random events
-            if (Math.random() < 0.001) triggerEvent();
-            
-            // Update UI
-            updateHUD();
-            
-            // Check end
-            if (game.miles >= game.trail.length) {
-                endRide(true);
-            } else if (game.battery <= 0) {
-                game.battery = 0;
-                endRide(false);
-            }
-            
-        }, 100);
-    }
-    
-    function updateHUD() {
-        const batteryEl = document.getElementById('hud-battery');
-        batteryEl.textContent = Math.round(game.battery) + '%';
-        batteryEl.className = 'hud-value hud-battery' + 
-            (game.battery < 15 ? ' danger' : game.battery < 30 ? ' warning' : '');
-        
-        document.getElementById('hud-miles').textContent = game.miles.toFixed(1) + ' mi';
-        
-        const mins = Math.floor(game.time / 60);
-        const secs = Math.floor(game.time % 60);
-        document.getElementById('hud-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-        
-        document.getElementById('speed-value').textContent = Math.round(game.speed);
-        
-        const progress = (game.miles / game.trail.length) * 100;
-        document.getElementById('progress-fill').style.width = progress + '%';
-        
-        // Update wheel animation speed
-        const wheelSpeed = Math.max(0.1, 1 - (game.speed / 100));
-        document.querySelectorAll('.wheel').forEach(w => {
-            w.style.animationDuration = wheelSpeed + 's';
-        });
-    }
-    
-    function setMode(mode) {
-        game.mode = mode;
-        
-        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`.mode-${mode}`).classList.add('active');
-        
-        const modeInfo = {
-            eco: { icon: '🌱', name: 'ECO', color: '#22c55e' },
-            normal: { icon: '🚴', name: 'NORMAL', color: '#00ccff' },
-            sport: { icon: '⚡', name: 'SPORT', color: '#ff9500' },
-            turbo: { icon: '🚀', name: 'TURBO', color: '#ff4757' }
+        const UPGRADES = {
+            battery: [
+                { id: 'bat1', name: '52V 20Ah', effect: '+10 Range', stat: 'range', bonus: 10, price: 400 },
+                { id: 'bat2', name: '72V 30Ah', effect: '+25 Range', stat: 'range', bonus: 25, price: 900 },
+                { id: 'bat3', name: '72V 40Ah', effect: '+45 Range', stat: 'range', bonus: 45, price: 1600 }
+            ],
+            motor: [
+                { id: 'mot1', name: 'Hub 1500W', effect: '+5 Speed', stat: 'speed', bonus: 5, price: 500 },
+                { id: 'mot2', name: 'QS205 3kW', effect: '+12 Speed', stat: 'speed', bonus: 12, price: 1100 },
+                { id: 'mot3', name: 'QS205 5kW', effect: '+20 Speed', stat: 'speed', bonus: 20, price: 1800 }
+            ],
+            controller: [
+                { id: 'ctrl1', name: 'Basic 50A', effect: '+1 Accel', stat: 'accel', bonus: 1, price: 250 },
+                { id: 'ctrl2', name: 'Fardriver ND72', effect: '+2 Accel', stat: 'accel', bonus: 2, price: 550 },
+                { id: 'ctrl3', name: 'Fardriver ND84', effect: '+4 Accel', stat: 'accel', bonus: 4, price: 950 }
+            ]
         };
         
-        const indicator = document.getElementById('mode-indicator');
-        indicator.textContent = `${modeInfo[mode].icon} ${modeInfo[mode].name}`;
-        indicator.style.color = modeInfo[mode].color;
-        
-        // Bike jump animation
-        const bike = document.getElementById('bike-container');
-        bike.classList.add('jumping');
-        setTimeout(() => bike.classList.remove('jumping'), 400);
-    }
-    
-    // ===== SCENERY =====
-    function startScenery() {
-        const trees = document.getElementById('trees');
-        trees.innerHTML = '';
-        
-        loops.trees = setInterval(() => {
-            if (game.paused || !game.running) return;
-            
-            const tree = document.createElement('div');
-            tree.className = 'tree';
-            tree.innerHTML = renderTreeSVG();
-            tree.style.left = '100%';
-            tree.style.bottom = (Math.random() * 30) + '%';
-            
-            const duration = 3 - (game.speed / 50);
-            tree.style.animationDuration = Math.max(1, duration) + 's';
-            
-            trees.appendChild(tree);
-            setTimeout(() => tree.remove(), 5000);
-        }, 800);
-    }
-    
-    function renderTreeSVG() {
-        const types = [
-            // Pine tree
-            `<svg width="40" height="60" viewBox="0 0 40 60">
-                <polygon points="20,5 35,25 28,25 38,40 25,40 30,55 10,55 15,40 2,40 12,25 5,25" fill="#2d5a27"/>
-                <rect x="17" y="50" width="6" height="10" fill="#5d4037"/>
-            </svg>`,
-            // Round tree
-            `<svg width="40" height="55" viewBox="0 0 40 55">
-                <circle cx="20" cy="20" r="18" fill="#3a7d32"/>
-                <rect x="17" y="35" width="6" height="15" fill="#5d4037"/>
-            </svg>`,
-            // Bush
-            `<svg width="35" height="30" viewBox="0 0 35 30">
-                <ellipse cx="17" cy="18" rx="16" ry="12" fill="#4a8c3f"/>
-                <ellipse cx="10" cy="15" rx="10" ry="10" fill="#3d7a34"/>
-                <ellipse cx="25" cy="16" rx="9" ry="9" fill="#3d7a34"/>
-            </svg>`,
-            // Rock
-            `<svg width="30" height="25" viewBox="0 0 30 25">
-                <polygon points="5,25 1,18 8,10 15,8 22,10 28,15 25,25" fill="#6b6b6b"/>
-                <polygon points="8,10 15,8 12,15 6,18" fill="#7a7a7a"/>
-            </svg>`
+        const EVENTS = [
+            { icon: '🦌', title: 'Wildlife', text: 'A deer watches from the treeline.', battery: 0 },
+            { icon: '🚧', title: 'Detour', text: 'Trail construction - rough path ahead!', battery: -8 },
+            { icon: '💨', title: 'Headwind', text: 'Strong gusts slow you down.', battery: -5 },
+            { icon: '☀️', title: 'Perfect Day', text: 'Ideal riding conditions boost efficiency!', battery: 5 },
+            { icon: '🧑‍🤝‍🧑', title: 'Fellow Rider', text: 'They share their portable charger!', battery: 12 },
+            { icon: '🌧️', title: 'Rain Shower', text: 'Quick downpour reduces traction.', battery: -6 },
+            { icon: '⬇️', title: 'Downhill', text: 'Regenerative braking kicks in!', battery: 10 },
+            { icon: '⛰️', title: 'Hill Climb', text: 'Steep grade drains extra power.', battery: -10 },
+            { icon: '☕', title: 'Trail Cafe', text: 'Quick stop for coffee and a top-off!', battery: 15 },
+            { icon: '🌈', title: 'Rainbow', text: 'Beautiful view after the storm!', battery: 3 },
+            { icon: '🛞', title: 'Rough Patch', text: 'Bumpy section slows you down.', battery: -4 },
+            { icon: '🎉', title: 'Trail Event', text: 'Local bike meetup - good vibes!', battery: 5 }
         ];
-        return types[Math.floor(Math.random() * types.length)];
-    }
-    
-    function spawnClouds() {
-        const sky = document.getElementById('sky');
-        for (let i = 0; i < 5; i++) {
-            const cloud = document.createElement('div');
-            cloud.className = 'cloud';
-            cloud.style.width = (60 + Math.random() * 80) + 'px';
-            cloud.style.height = (20 + Math.random() * 20) + 'px';
-            cloud.style.top = (10 + Math.random() * 20) + '%';
-            cloud.style.animationDuration = (20 + Math.random() * 20) + 's';
-            cloud.style.animationDelay = (-Math.random() * 20) + 's';
-            sky.appendChild(cloud);
-        }
-    }
-    
-    function spawnMountains() {
-        const mountains = document.getElementById('mountains');
-        for (let i = 0; i < 6; i++) {
-            const mountain = document.createElement('div');
-            mountain.className = 'mountain';
-            mountain.style.left = (i * 20 - 10) + '%';
-            mountain.style.borderBottomWidth = (60 + Math.random() * 60) + 'px';
-            mountain.style.opacity = 0.3 + Math.random() * 0.4;
-            mountains.appendChild(mountain);
-        }
-    }
-    
-    // ===== EVENTS =====
-    function triggerEvent() {
-        if (game.paused) return;
-        game.paused = true;
         
-        const event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+        // ========== PLAYER STATE (Persistent) ==========
+        let player = {
+            money: 500,
+            ownedBikes: ['revv1'],
+            ownedUpgrades: [],
+            currentBike: 'revv1',
+            totalMiles: 0,
+            totalRides: 0
+        };
         
-        document.getElementById('event-icon').textContent = event.icon;
-        document.getElementById('event-title').textContent = event.title;
-        document.getElementById('event-text').textContent = event.text;
+        // ========== RIDE STATE (Per-ride) ==========
+        let ride = {
+            bike: null,
+            trail: null,
+            battery: 100,
+            distance: 0,
+            time: 0,
+            speed: 0,
+            topSpeed: 0,
+            mode: 'eco',
+            running: false,
+            paused: false
+        };
         
-        const effectEl = document.getElementById('event-effect');
-        if (event.battery > 0) {
-            effectEl.textContent = '+' + event.battery + '% Battery';
-            effectEl.className = 'event-effect good';
-        } else if (event.battery < 0) {
-            effectEl.textContent = event.battery + '% Battery';
-            effectEl.className = 'event-effect bad';
-        } else {
-            effectEl.textContent = 'No effect';
-            effectEl.className = 'event-effect';
+        // ========== SELECTION STATE ==========
+        let selection = {
+            bike: null,
+            trail: null
+        };
+        
+        // Loop reference
+        let gameLoop = null;
+        let treeSpawner = null;
+        
+        // ========== INITIALIZATION ==========
+        function init() {
+            loadPlayer();
+            renderBikes();
+            renderTrails();
+            renderGarage();
+            updateTitleStats();
+            spawnInitialScenery();
+            console.log('Trail Quest initialized');
         }
         
-        game.battery = Math.max(0, Math.min(100, game.battery + event.battery));
+        function loadPlayer() {
+            try {
+                const saved = localStorage.getItem('trailquest_save');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    player = { ...player, ...data };
+                }
+            } catch (e) {
+                console.warn('Failed to load save:', e);
+            }
+        }
         
-        document.getElementById('event-overlay').classList.add('show');
-    }
-    
-    function closeEvent() {
-        document.getElementById('event-overlay').classList.remove('show');
-        game.paused = false;
-    }
-    
-    // ===== END RIDE =====
-    function endRide(success) {
-        game.running = false;
-        clearInterval(loops.game);
-        clearInterval(loops.trees);
+        function savePlayer() {
+            try {
+                localStorage.setItem('trailquest_save', JSON.stringify(player));
+            } catch (e) {
+                console.warn('Failed to save:', e);
+            }
+        }
         
-        // Calculate reward
-        const baseReward = Math.round(game.trail.length * 5);
-        const bonusReward = success ? Math.round(game.battery * 2) : 0;
-        const totalReward = baseReward + bonusReward;
+        // ========== SCREEN NAVIGATION ==========
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            // Show target screen
+            const screen = document.getElementById('screen-' + screenId);
+            if (screen) {
+                screen.classList.add('active');
+            }
+            
+            // Screen-specific updates
+            if (screenId === 'title') {
+                updateTitleStats();
+            } else if (screenId === 'bikes') {
+                renderBikes();
+                document.getElementById('bikes-money').textContent = player.money;
+            } else if (screenId === 'garage') {
+                renderGarage();
+                document.getElementById('garage-money').textContent = player.money;
+            } else if (screenId === 'trails') {
+                renderTrails();
+            }
+        }
         
-        if (success) {
-            player.money += totalReward;
-            player.totalMiles += Math.round(game.miles);
-            player.totalRides++;
+        // ========== TITLE SCREEN ==========
+        function updateTitleStats() {
+            document.getElementById('stat-miles').textContent = player.totalMiles;
+            document.getElementById('stat-rides').textContent = player.totalRides;
+        }
+        
+        // ========== BIKE SELECT ==========
+        function renderBikes() {
+            const grid = document.getElementById('bike-grid');
+            const bonuses = calculateBonuses();
+            
+            grid.innerHTML = BIKES.map(bike => {
+                const owned = player.ownedBikes.includes(bike.id);
+                const selected = selection.bike === bike.id;
+                const stats = owned ? {
+                    speed: bike.speed + bonuses.speed,
+                    range: bike.range + bonuses.range
+                } : bike;
+                
+                return `
+                    <div class="bike-card ${selected ? 'selected' : ''} ${!owned ? 'locked' : ''}" 
+                         onclick="Game.selectBike('${bike.id}')">
+                        <div class="bike-card-image">
+                            ${renderBikeSVG(bike.color, 70)}
+                        </div>
+                        <div class="bike-card-name">${bike.name}</div>
+                        <div class="bike-card-type">${bike.type}</div>
+                        <div class="bike-card-stats">
+                            <span>${stats.speed} mph</span>
+                            <span>${stats.range} mi</span>
+                        </div>
+                        ${owned 
+                            ? `<div class="bike-card-price">${selected ? '✓ Selected' : 'Owned'}</div>`
+                            : `<div class="bike-card-price">$${bike.price}</div>`
+                        }
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function selectBike(bikeId) {
+            const bike = BIKES.find(b => b.id === bikeId);
+            if (!bike) return;
+            
+            const owned = player.ownedBikes.includes(bikeId);
+            
+            if (!owned) {
+                // Try to buy
+                if (player.money >= bike.price) {
+                    if (confirm(`Buy ${bike.name} for $${bike.price}?`)) {
+                        player.money -= bike.price;
+                        player.ownedBikes.push(bikeId);
+                        savePlayer();
+                        document.getElementById('bikes-money').textContent = player.money;
+                    }
+                } else {
+                    alert(`Not enough money! You need $${bike.price}`);
+                }
+                renderBikes();
+                return;
+            }
+            
+            // Select the bike
+            selection.bike = bikeId;
+            player.currentBike = bikeId;
             savePlayer();
+            renderBikes();
+            
+            // Enable continue button
+            const btn = document.getElementById('btn-bikes-next');
+            btn.disabled = false;
+            btn.textContent = 'Next →';
         }
         
-        // Update UI
-        document.getElementById('results-icon').textContent = success ? '🏆' : '🔋';
-        document.getElementById('results-title').textContent = success ? 'Trail Complete!' : 'Out of Battery!';
-        document.getElementById('results-title').className = 'results-title ' + (success ? 'success' : 'failure');
-        document.getElementById('results-subtitle').textContent = success ? game.trail.name : 'Better luck next time!';
+        // ========== TRAIL SELECT ==========
+        function renderTrails() {
+            const list = document.getElementById('trail-list');
+            
+            list.innerHTML = TRAILS.map((trail, idx) => {
+                const selected = selection.trail === idx;
+                return `
+                    <div class="trail-card ${selected ? 'selected' : ''}" 
+                         onclick="Game.selectTrail(${idx})">
+                        <div class="trail-icon">${trail.icon}</div>
+                        <div class="trail-info">
+                            <div class="trail-name">${trail.name}</div>
+                            <div class="trail-meta">${trail.state} • ${trail.surface}</div>
+                        </div>
+                        <div class="trail-length">
+                            <div class="trail-miles">${trail.length}</div>
+                            <div class="trail-unit">miles</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
         
-        document.getElementById('result-distance').textContent = game.miles.toFixed(1) + ' mi';
-        const mins = Math.floor(game.time / 60);
-        const secs = Math.floor(game.time % 60);
-        document.getElementById('result-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-        document.getElementById('result-speed').textContent = Math.round(game.topSpeed) + ' mph';
-        document.getElementById('result-battery').textContent = Math.round(game.battery) + '%';
+        function selectTrail(idx) {
+            selection.trail = idx;
+            renderTrails();
+            
+            const btn = document.getElementById('btn-trails-next');
+            btn.disabled = false;
+            btn.textContent = "Let's Ride! →";
+        }
         
-        document.getElementById('results-reward').style.display = success ? 'block' : 'none';
-        document.querySelector('.reward-text').textContent = `+$${totalReward} earned!`;
+        // ========== GARAGE ==========
+        function renderGarage() {
+            const content = document.getElementById('garage-content');
+            const bike = BIKES.find(b => b.id === player.currentBike) || BIKES[0];
+            const bonuses = calculateBonuses();
+            
+            let html = `
+                <div class="garage-bike">
+                    <div class="garage-bike-image">
+                        ${renderBikeSVG(bike.color, 140)}
+                    </div>
+                    <div class="garage-bike-name">${bike.name}</div>
+                    <div class="garage-bike-type">${bike.type}</div>
+                    <div class="garage-stats">
+                        <div class="garage-stat">
+                            <div class="garage-stat-value">${bike.speed + bonuses.speed}</div>
+                            <div class="garage-stat-label">Speed</div>
+                        </div>
+                        <div class="garage-stat">
+                            <div class="garage-stat-value">${bike.range + bonuses.range}</div>
+                            <div class="garage-stat-label">Range</div>
+                        </div>
+                        <div class="garage-stat">
+                            <div class="garage-stat-value">${bike.accel + bonuses.accel}</div>
+                            <div class="garage-stat-label">Accel</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Upgrade sections
+            const sections = [
+                { key: 'battery', icon: '🔋', title: 'Battery Upgrades' },
+                { key: 'motor', icon: '⚙️', title: 'Motor Upgrades' },
+                { key: 'controller', icon: '🎛️', title: 'Controller Upgrades' }
+            ];
+            
+            sections.forEach(section => {
+                html += `
+                    <div class="upgrade-section">
+                        <div class="upgrade-section-title">${section.icon} ${section.title}</div>
+                        <div class="upgrade-grid">
+                            ${UPGRADES[section.key].map(upgrade => {
+                                const owned = player.ownedUpgrades.includes(upgrade.id);
+                                const canAfford = player.money >= upgrade.price;
+                                return `
+                                    <div class="upgrade-card ${owned ? 'owned' : ''} ${!owned && !canAfford ? 'locked' : ''}"
+                                         onclick="${owned ? '' : `Game.buyUpgrade('${upgrade.id}')`}">
+                                        <div class="upgrade-name">${upgrade.name}</div>
+                                        <div class="upgrade-effect">${upgrade.effect}</div>
+                                        <div class="upgrade-price">${owned ? '✓ Owned' : '$' + upgrade.price}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
         
-        showScreen('results-screen');
-    }
+        function buyUpgrade(upgradeId) {
+            // Find the upgrade
+            let upgrade = null;
+            for (const category of Object.values(UPGRADES)) {
+                upgrade = category.find(u => u.id === upgradeId);
+                if (upgrade) break;
+            }
+            
+            if (!upgrade) return;
+            if (player.ownedUpgrades.includes(upgradeId)) return;
+            if (player.money < upgrade.price) {
+                alert(`Not enough money! You need $${upgrade.price}`);
+                return;
+            }
+            
+            player.money -= upgrade.price;
+            player.ownedUpgrades.push(upgradeId);
+            savePlayer();
+            renderGarage();
+            document.getElementById('garage-money').textContent = player.money;
+        }
+        
+        function calculateBonuses() {
+            const bonuses = { speed: 0, range: 0, accel: 0 };
+            
+            for (const category of Object.values(UPGRADES)) {
+                for (const upgrade of category) {
+                    if (player.ownedUpgrades.includes(upgrade.id)) {
+                        bonuses[upgrade.stat] += upgrade.bonus;
+                    }
+                }
+            }
+            
+            return bonuses;
+        }
+        
+        // ========== RIDE ==========
+        function startRide() {
+            // Get selected bike with bonuses
+            const baseBike = BIKES.find(b => b.id === (selection.bike || player.currentBike)) || BIKES[0];
+            const bonuses = calculateBonuses();
+            
+            ride.bike = {
+                ...baseBike,
+                speed: Math.max(10, baseBike.speed + bonuses.speed),
+                range: Math.max(10, baseBike.range + bonuses.range),
+                accel: Math.max(1, baseBike.accel + bonuses.accel)
+            };
+            
+            console.log('Ride bike stats:', ride.bike);
+            
+            // Get selected trail
+            ride.trail = TRAILS[selection.trail] || TRAILS[0];
+            
+            // Reset ride state
+            ride.battery = 100;
+            ride.distance = 0;
+            ride.time = 0;
+            ride.speed = 0;
+            ride.topSpeed = 0;
+            ride.mode = 'eco';
+            ride.running = true;
+            ride.paused = false;
+            
+            // Show ride screen
+            showScreen('ride');
+            
+            // Set initial mode
+            setMode('eco');
+            
+            // Update HUD
+            updateRideHUD();
+            
+            // Start game loop
+            startGameLoop();
+            startTreeSpawner();
+            
+            console.log('Ride started:', ride.bike.name, 'on', ride.trail.name);
+        }
+        
+        function startGameLoop() {
+            if (gameLoop) clearInterval(gameLoop);
+            
+            gameLoop = setInterval(() => {
+                if (!ride.running || ride.paused) return;
+                
+                // Calculate target speed based on mode
+                const speedMultipliers = { eco: 0.4, normal: 0.6, sport: 0.8, turbo: 1.0 };
+                const targetSpeed = ride.bike.speed * speedMultipliers[ride.mode];
+                
+                // Smoothly approach target speed
+                const accelRate = 0.3 + (ride.bike.accel * 0.08);
+                if (ride.speed < targetSpeed) {
+                    ride.speed = Math.min(targetSpeed, ride.speed + accelRate);
+                } else if (ride.speed > targetSpeed) {
+                    ride.speed = Math.max(targetSpeed, ride.speed - accelRate * 0.5);
+                }
+                
+                // Track top speed
+                if (ride.speed > ride.topSpeed) {
+                    ride.topSpeed = ride.speed;
+                }
+                
+                // Update distance (speed is mph, tick is 100ms)
+                // mph / 3600 = miles per second, / 10 = miles per 100ms
+                const milesThisTick = ride.speed / 36000;
+                ride.distance += milesThisTick;
+                
+                // Battery drain based on distance traveled (not time)
+                // This way, your range stat actually means something!
+                // drain per mile = 100% / bike range
+                // mode multipliers make aggressive modes less efficient
+                const drainPerMile = 100 / ride.bike.range;
+                const modeMultiplier = { eco: 0.8, normal: 1.0, sport: 1.25, turbo: 1.6 };
+                ride.battery -= milesThisTick * drainPerMile * modeMultiplier[ride.mode];
+                
+                // Clamp battery
+                ride.battery = Math.max(0, Math.min(100, ride.battery));
+                
+                // Update time
+                ride.time += 0.1;
+                
+                // Random events (0.15% chance per tick = roughly every 60-70 seconds)
+                if (Math.random() < 0.0015) {
+                    triggerEvent();
+                }
+                
+                // Update HUD
+                updateRideHUD();
+                
+                // Update wheel spin speed
+                updateWheelSpeed();
+                
+                // Check end conditions
+                if (ride.distance >= ride.trail.length) {
+                    endRide(true);
+                } else if (ride.battery <= 0) {
+                    endRide(false);
+                }
+                
+            }, 100);
+        }
+        
+        function startTreeSpawner() {
+            if (treeSpawner) clearInterval(treeSpawner);
+            
+            const world = document.getElementById('ride-world');
+            
+            treeSpawner = setInterval(() => {
+                if (!ride.running || ride.paused) return;
+                
+                const tree = document.createElement('div');
+                tree.className = 'tree';
+                tree.innerHTML = getRandomTreeSVG();
+                tree.style.right = '-60px';
+                tree.style.bottom = (35 + Math.random() * 15) + '%';
+                
+                // Speed based on ride speed
+                const duration = Math.max(1, 4 - (ride.speed / 30));
+                tree.style.transition = `right ${duration}s linear`;
+                
+                world.appendChild(tree);
+                
+                // Animate
+                requestAnimationFrame(() => {
+                    tree.style.right = '110%';
+                });
+                
+                // Remove after animation
+                setTimeout(() => tree.remove(), duration * 1000 + 500);
+                
+            }, 600);
+        }
+        
+        function updateRideHUD() {
+            // Battery
+            const batteryEl = document.getElementById('hud-battery');
+            const batteryPct = Math.round(ride.battery);
+            batteryEl.textContent = batteryPct + '%';
+            batteryEl.className = 'hud-value hud-battery' + 
+                (batteryPct < 15 ? ' danger' : batteryPct < 30 ? ' warning' : '');
+            
+            // Distance
+            document.getElementById('hud-distance').textContent = ride.distance.toFixed(1) + ' mi';
+            
+            // Time
+            const mins = Math.floor(ride.time / 60);
+            const secs = Math.floor(ride.time % 60);
+            document.getElementById('hud-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            // Speed
+            document.getElementById('ride-speed').textContent = Math.round(ride.speed);
+            
+            // Progress
+            const progress = Math.min(100, (ride.distance / ride.trail.length) * 100);
+            document.getElementById('ride-progress').style.width = progress + '%';
+        }
+        
+        function updateWheelSpeed() {
+            const duration = Math.max(0.1, 0.8 - (ride.speed / 100));
+            document.querySelectorAll('.wheel-spin').forEach(wheel => {
+                wheel.style.animationDuration = duration + 's';
+            });
+        }
+        
+        function setMode(mode) {
+            ride.mode = mode;
+            
+            // Update button states
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            
+            // Update mode display
+            const modeInfo = {
+                eco: { icon: '🌱', name: 'ECO', color: '#22c55e' },
+                normal: { icon: '🚴', name: 'NORMAL', color: '#06b6d4' },
+                sport: { icon: '⚡', name: 'SPORT', color: '#f59e0b' },
+                turbo: { icon: '🚀', name: 'TURBO', color: '#ef4444' }
+            };
+            
+            const modeEl = document.getElementById('ride-mode');
+            modeEl.textContent = `${modeInfo[mode].icon} ${modeInfo[mode].name}`;
+            modeEl.style.color = modeInfo[mode].color;
+            
+            // Bike jump animation
+            const bike = document.getElementById('ride-bike');
+            bike.classList.add('jumping');
+            setTimeout(() => bike.classList.remove('jumping'), 350);
+        }
+        
+        function triggerEvent() {
+            if (ride.paused) return;
+            ride.paused = true;
+            
+            // Pick random event
+            const event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+            
+            // Update popup
+            document.getElementById('event-icon').textContent = event.icon;
+            document.getElementById('event-title').textContent = event.title;
+            document.getElementById('event-text').textContent = event.text;
+            
+            const effectEl = document.getElementById('event-effect');
+            if (event.battery > 0) {
+                effectEl.textContent = `+${event.battery}% Battery`;
+                effectEl.className = 'event-effect positive';
+            } else if (event.battery < 0) {
+                effectEl.textContent = `${event.battery}% Battery`;
+                effectEl.className = 'event-effect negative';
+            } else {
+                effectEl.textContent = 'No effect';
+                effectEl.className = 'event-effect neutral';
+            }
+            
+            // Apply effect
+            ride.battery = Math.max(0, Math.min(100, ride.battery + event.battery));
+            
+            // Show popup
+            document.getElementById('event-overlay').classList.add('show');
+        }
+        
+        function closeEvent() {
+            document.getElementById('event-overlay').classList.remove('show');
+            ride.paused = false;
+        }
+        
+        function endRide(success) {
+            ride.running = false;
+            
+            // Stop loops
+            if (gameLoop) clearInterval(gameLoop);
+            if (treeSpawner) clearInterval(treeSpawner);
+            
+            // Calculate reward
+            let reward = 0;
+            if (success) {
+                const baseReward = Math.round(ride.trail.length * 8);
+                const batteryBonus = Math.round(ride.battery * 1.5);
+                reward = baseReward + batteryBonus;
+                
+                player.money += reward;
+                player.totalMiles += Math.round(ride.distance);
+                player.totalRides++;
+                savePlayer();
+            }
+            
+            // Update results screen
+            document.getElementById('results-icon').textContent = success ? '🏆' : '🔋';
+            
+            const titleEl = document.getElementById('results-title');
+            titleEl.textContent = success ? 'Trail Complete!' : 'Out of Battery!';
+            titleEl.className = 'results-title ' + (success ? 'success' : 'failure');
+            
+            document.getElementById('results-trail').textContent = ride.trail.name;
+            
+            document.getElementById('results-distance').textContent = ride.distance.toFixed(1) + ' mi';
+            
+            const mins = Math.floor(ride.time / 60);
+            const secs = Math.floor(ride.time % 60);
+            document.getElementById('results-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            document.getElementById('results-speed').textContent = Math.round(ride.topSpeed) + ' mph';
+            document.getElementById('results-battery').textContent = Math.round(ride.battery) + '%';
+            
+            const rewardEl = document.getElementById('results-reward');
+            if (success) {
+                rewardEl.style.display = 'block';
+                rewardEl.querySelector('.results-reward-text').textContent = `+$${reward} Earned!`;
+            } else {
+                rewardEl.style.display = 'none';
+            }
+            
+            showScreen('results');
+        }
+        
+        // ========== HELPER FUNCTIONS ==========
+        function renderBikeSVG(color, size) {
+            const scale = size / 100;
+            return `
+                <svg width="${size}" height="${size * 0.65}" viewBox="0 0 100 65">
+                    <g transform="scale(1)">
+                        <circle cx="18" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                        <circle cx="18" cy="45" r="5" fill="#334155"/>
+                        <circle cx="72" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                        <circle cx="72" cy="45" r="5" fill="#334155"/>
+                        <path d="M18 45 L32 22 L60 22 L72 45" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M32 22 L32 45 L18 45" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M60 22 L50 45" fill="none" stroke="${color}" stroke-width="4"/>
+                        <rect x="35" y="25" width="22" height="10" rx="2" fill="#1e293b"/>
+                        <rect x="37" y="27" width="6" height="6" rx="1" fill="${color}"/>
+                        <ellipse cx="30" cy="18" rx="10" ry="3" fill="#1e293b"/>
+                        <path d="M60 22 L68 15 L78 13" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                </svg>
+            `;
+        }
+        
+        function getRandomTreeSVG() {
+            const trees = [
+                // Pine
+                `<svg width="50" height="70" viewBox="0 0 50 70">
+                    <polygon points="25,5 45,30 38,30 48,50 35,50 42,65 8,65 15,50 2,50 12,30 5,30" fill="#166534"/>
+                    <rect x="21" y="60" width="8" height="10" fill="#78350f"/>
+                </svg>`,
+                // Round tree
+                `<svg width="45" height="60" viewBox="0 0 45 60">
+                    <circle cx="22" cy="22" r="20" fill="#15803d"/>
+                    <rect x="18" y="38" width="8" height="18" fill="#78350f"/>
+                </svg>`,
+                // Bush
+                `<svg width="40" height="35" viewBox="0 0 40 35">
+                    <ellipse cx="20" cy="20" rx="18" ry="14" fill="#16a34a"/>
+                    <ellipse cx="12" cy="18" rx="10" ry="10" fill="#15803d"/>
+                    <ellipse cx="28" cy="18" rx="10" ry="10" fill="#15803d"/>
+                </svg>`,
+                // Rock
+                `<svg width="35" height="28" viewBox="0 0 35 28">
+                    <polygon points="5,28 2,20 10,12 18,10 26,12 33,18 30,28" fill="#6b7280"/>
+                    <polygon points="10,12 18,10 15,18 7,20" fill="#9ca3af"/>
+                </svg>`
+            ];
+            return trees[Math.floor(Math.random() * trees.length)];
+        }
+        
+        function spawnInitialScenery() {
+            // Add some mountains to ride screen background
+            const world = document.getElementById('ride-world');
+            for (let i = 0; i < 5; i++) {
+                const mountain = document.createElement('div');
+                mountain.className = 'mountain';
+                mountain.style.left = (i * 25 - 10) + '%';
+                mountain.style.borderBottomWidth = (80 + Math.random() * 60) + 'px';
+                mountain.style.borderLeftWidth = (60 + Math.random() * 40) + 'px';
+                mountain.style.borderRightWidth = (60 + Math.random() * 40) + 'px';
+                mountain.style.opacity = 0.2 + Math.random() * 0.2;
+                world.appendChild(mountain);
+            }
+            
+            // Add clouds
+            for (let i = 0; i < 4; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.style.width = (60 + Math.random() * 80) + 'px';
+                cloud.style.height = (20 + Math.random() * 15) + 'px';
+                cloud.style.top = (5 + Math.random() * 15) + '%';
+                cloud.style.left = (Math.random() * 100) + '%';
+                world.appendChild(cloud);
+            }
+        }
+        
+        // ========== PUBLIC API ==========
+        return {
+            init,
+            showScreen,
+            selectBike,
+            selectTrail,
+            buyUpgrade,
+            startRide,
+            setMode,
+            closeEvent
+        };
+    })();
     
-    // ===== START =====
-    init();
+    // Start the game
+    Game.init();
     </script>
 </body>
 </html>
