@@ -611,66 +611,90 @@
         }
 
         /* Mini Map */
-        .mini-map {
-            height: 200px;
+        /* Trail Map Visualization */
+        .trail-map {
             background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .trail-path {
             position: relative;
-            overflow: hidden;
+            height: 80px;
+            margin: 20px 0;
         }
-
-        .mini-map-trail {
+        
+        .trail-line {
             position: absolute;
-            top: 50%;
-            left: 10%;
-            right: 10%;
-            height: 4px;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 6px;
             background: var(--border);
-            border-radius: 2px;
+            border-radius: 3px;
         }
-
-        .mini-map-progress {
+        
+        .trail-progress-line {
             position: absolute;
-            top: 50%;
-            left: 10%;
-            height: 4px;
-            background: var(--primary);
-            border-radius: 2px;
+            top: 30px;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
             transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--primary);
         }
-
-        .mini-map-rider {
+        
+        .trail-section {
             position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            transition: left 0.5s ease;
-            z-index: 2;
-        }
-
-        .mini-map-start, .mini-map-end {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.2rem;
-        }
-
-        .mini-map-start { left: 5%; }
-        .mini-map-end { right: 5%; }
-
-        .mini-map-chargers {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .mini-map-label {
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
+            top: 0;
             transform: translateX(-50%);
-            font-size: 0.75rem;
+            text-align: center;
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        
+        .trail-section.completed { opacity: 0.8; }
+        .trail-section.current { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        
+        .section-marker {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .section-name {
+            font-size: 0.65rem;
             color: var(--text-dim);
+            white-space: nowrap;
+        }
+        
+        .trail-section.current .section-name {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .rider-marker {
+            position: absolute;
+            top: 20px;
+            font-size: 1.8rem;
+            transform: translateX(-50%);
+            transition: left 0.5s ease;
+            filter: drop-shadow(0 0 8px var(--primary));
+            z-index: 5;
+        }
+        
+        .trail-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+        }
+        
+        .current-section {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         /* Achievements */
@@ -1238,8 +1262,8 @@
     </script>
     
     <!-- Bike Builder System -->
-    <script src="js/bike-builder.js?v=5" onerror="document.getElementById('load-error').textContent='Failed to load bike-builder.js';document.getElementById('load-error').style.display='block';"></script>
-    <script src="js/garage-ui.js?v=5" onerror="document.getElementById('load-error').textContent='Failed to load garage-ui.js';document.getElementById('load-error').style.display='block';"></script>
+    <script src="js/bike-builder.js?v=6" onerror="document.getElementById('load-error').textContent='Failed to load bike-builder.js';document.getElementById('load-error').style.display='block';"></script>
+    <script src="js/garage-ui.js?v=6" onerror="document.getElementById('load-error').textContent='Failed to load garage-ui.js';document.getElementById('load-error').style.display='block';"></script>
     
     <script>
     // ============================================================
@@ -2320,16 +2344,61 @@
     }
 
     function renderMiniMap(progressPct) {
+        const trail = game.currentTrail;
+        const sections = getTrailSections(trail);
+        const currentSection = Math.floor((progressPct / 100) * sections.length);
+        
         return `
-            <div class="mini-map">
-                <div class="mini-map-trail"></div>
-                <div class="mini-map-progress" style="width: ${progressPct * 0.8}%"></div>
-                <div class="mini-map-start">🚩</div>
-                <div class="mini-map-rider" style="left: ${10 + progressPct * 0.8}%">🚴</div>
-                <div class="mini-map-end">🏁</div>
-                <div class="mini-map-label">${game.currentTrail.name}</div>
+            <div class="trail-map">
+                <div class="trail-path">
+                    ${sections.map((section, i) => {
+                        const completed = i < currentSection;
+                        const current = i === currentSection;
+                        const sectionPct = (i / sections.length) * 100;
+                        return `
+                            <div class="trail-section ${completed ? 'completed' : ''} ${current ? 'current' : ''}" 
+                                 style="left: ${sectionPct}%">
+                                <div class="section-marker">${section.icon}</div>
+                                <div class="section-name">${section.name}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                    <div class="trail-line"></div>
+                    <div class="trail-progress-line" style="width: ${progressPct}%"></div>
+                    <div class="rider-marker" style="left: ${progressPct}%">🏍️</div>
+                </div>
+                <div class="trail-info">
+                    <span>🚩 Start</span>
+                    <span class="current-section">${sections[currentSection]?.name || 'Finish!'}</span>
+                    <span>🏁 ${trail.length} mi</span>
+                </div>
             </div>
         `;
+    }
+    
+    function getTrailSections(trail) {
+        // Generate 4-6 sections based on trail length
+        const numSections = Math.min(6, Math.max(3, Math.floor(trail.length / 5)));
+        const sectionTypes = [
+            { icon: '🌲', name: 'Forest Path' },
+            { icon: '🌉', name: 'Bridge Crossing' },
+            { icon: '⛰️', name: 'Hill Climb' },
+            { icon: '🏘️', name: 'Town Center' },
+            { icon: '🌊', name: 'Waterfront' },
+            { icon: '🌾', name: 'Open Fields' },
+            { icon: '🛤️', name: 'Rail Corridor' },
+            { icon: '🏞️', name: 'Scenic Vista' },
+            { icon: '🌳', name: 'Shaded Grove' },
+            { icon: '🦆', name: 'Wetlands' }
+        ];
+        
+        const sections = [];
+        for (let i = 0; i < numSections; i++) {
+            // Pick section type based on trail + index for consistency
+            const idx = (trail.name.length + i * 7) % sectionTypes.length;
+            sections.push(sectionTypes[idx]);
+        }
+        return sections;
     }
 
     // ===================
