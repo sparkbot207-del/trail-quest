@@ -743,10 +743,13 @@ function calculateBuildStats(bike, controller, battery, motor) {
     if (motorData.windingType === 'torque') topSpeed *= 0.8;
     if (motorData.windingType === 'speed') topSpeed *= 1.1;
     
-    // Range calculation
-    const baseRange = (batteryData.wh / continuousPower) * 30; // rough estimate
+    // Range calculation - realistic Wh/mile based on power level
+    // Base efficiency: 20-40 Wh/mile depending on power and riding style
+    // Higher power = more consumption, but also more fun
+    const baseWhPerMile = 20 + (continuousPower / 500); // 3kW continuous = 26 Wh/mi, 5kW = 30 Wh/mi
     const efficiencyBonus = controllerData.stats.efficiency * motorData.stats.efficiency;
-    const range = Math.round(baseRange * efficiencyBonus);
+    const adjustedWhPerMile = baseWhPerMile / efficiencyBonus;
+    const range = Math.round(batteryData.wh / adjustedWhPerMile);
     
     // Torque calculation
     const torque = Math.round(motorData.torque * (batteryData.voltage / 72));
