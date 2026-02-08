@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trail Quest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --green: #00ff88;
+            --blue: #00ccff;
+            --orange: #ffaa00;
+            --red: #ff4444;
+            --dark: #0a0e14;
+            --card: rgba(15, 25, 35, 0.95);
+        }
+        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--dark);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        
+        /* Game Container - Full Screen */
+        #game {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Screens */
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+        }
+        .screen.active { display: flex; }
+        
+        /* Title Screen */
+        #title-screen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(180deg, #0a1520 0%, var(--dark) 100%);
+        }
+        
+        .title-logo { font-size: 4rem; margin-bottom: 10px; }
+        .title-text { 
+            font-size: 2rem; 
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+        }
+        
+        .play-btn {
+            background: linear-gradient(135deg, var(--green), #00cc6a);
+            border: none;
+            color: var(--dark);
+            padding: 18px 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .play-btn:active { transform: scale(0.95); }
+        
+        /* Bike Select */
+        #bike-screen {
+            padding: 20px;
+            background: var(--dark);
+        }
+        
+        .screen-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--green);
+        }
+        
+        .bike-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+        
+        .bike-card {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .bike-card:active { transform: scale(0.97); }
+        .bike-card.selected { border-color: var(--green); }
+        
+        .bike-icon { font-size: 2.5rem; margin-bottom: 8px; }
+        .bike-name { font-weight: 700; margin-bottom: 5px; }
+        .bike-stats { font-size: 0.8rem; opacity: 0.7; }
+        
+        .bottom-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--green);
+            color: var(--dark);
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        .bottom-btn:disabled { opacity: 0.4; }
+        
+        /* Trail Select */
+        #trail-screen { padding: 20px; }
+        
+        .trail-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 80px;
+        }
+        
+        .trail-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .trail-card:active { transform: scale(0.98); }
+        .trail-card.selected { border-color: var(--green); }
+        
+        .trail-icon { font-size: 2rem; }
+        .trail-info { flex: 1; }
+        .trail-name { font-weight: 700; margin-bottom: 3px; }
+        .trail-meta { font-size: 0.8rem; opacity: 0.7; }
+        .trail-length { 
+            font-weight: 700; 
+            color: var(--green);
+            font-size: 1.1rem;
+        }
+        
+        /* RIDE SCREEN - The Game */
+        #ride-screen {
+            background: linear-gradient(180deg, #1a3a2a 0%, #0d1f15 50%, var(--dark) 100%);
+        }
+        
+        /* Top HUD */
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .hud-stat {
+            text-align: center;
+        }
+        .hud-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .hud-label {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+        .hud-value.battery { color: var(--green); }
+        .hud-value.battery.warning { color: var(--orange); }
+        .hud-value.battery.danger { color: var(--red); }
+        
+        /* Trail View */
+        .trail-view {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Ground/Trail */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(180deg, #2d4a3a 0%, #1a2f22 100%);
+        }
+        
+        .trail-path {
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, #8b7355 0%, #6b5344 50%, #4a3828 100%);
+        }
+        
+        /* Rider */
+        .rider {
+            position: absolute;
+            bottom: calc(20% + 50px);
+            left: 25%;
+            font-size: 3rem;
+            transform: scaleX(-1);
+            transition: bottom 0.2s;
+            z-index: 10;
+        }
+        .rider.boost { 
+            animation: boost 0.3s ease-out;
+        }
+        @keyframes boost {
+            0%, 100% { transform: scaleX(-1) translateY(0); }
+            50% { transform: scaleX(-1) translateY(-20px); }
+        }
+        
+        /* Scenery (moving background elements) */
+        .scenery {
+            position: absolute;
+            bottom: 40%;
+            left: 0;
+            right: 0;
+            height: 60%;
+        }
+        
+        .tree {
+            position: absolute;
+            font-size: 2.5rem;
+            bottom: 0;
+            animation: scroll-by 4s linear infinite;
+        }
+        @keyframes scroll-by {
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-100px); }
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            right: 20px;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        /* Speed indicator */
+        .speed-display {
+            position: absolute;
+            bottom: 45%;
+            right: 20px;
+            text-align: right;
+        }
+        .speed-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .speed-unit {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* Controls */
+        .controls {
+            padding: 20px;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .control-btn:active { transform: scale(0.95); }
+        
+        .btn-cruise {
+            background: var(--blue);
+            color: var(--dark);
+        }
+        .btn-boost {
+            background: var(--green);
+            color: var(--dark);
+        }
+        .btn-turbo {
+            background: var(--orange);
+            color: var(--dark);
+        }
+        
+        /* Event Popup */
+        .event-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            max-width: 300px;
+            border: 2px solid var(--green);
+            display: none;
+            z-index: 100;
+        }
+        .event-popup.show { display: block; }
+        
+        .event-icon { font-size: 3rem; margin-bottom: 10px; }
+        .event-text { margin-bottom: 15px; line-height: 1.4; }
+        .event-effect { 
+            font-weight: 700; 
+            color: var(--green);
+            margin-bottom: 15px;
+        }
+        .event-effect.bad { color: var(--orange); }
+        
+        .event-btn {
+            background: var(--green);
+            color: var(--dark);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        /* Results Screen */
+        #results-screen {
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .results-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--green);
+        }
+        
+        .results-stats {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .result-row:last-child { border: none; }
+        .result-value { font-weight: 700; color: var(--green); }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <!-- Title Screen -->
+        <div id="title-screen" class="screen active">
+            <div class="title-logo">🏍️⚡</div>
+            <div class="title-text">TRAIL QUEST</div>
+            <button class="play-btn" onclick="showScreen('bike-screen')">RIDE</button>
+        </div>
+        
+        <!-- Bike Select -->
+        <div id="bike-screen" class="screen">
+            <div class="screen-title">Choose Your Ride</div>
+            <div class="bike-grid" id="bike-grid"></div>
+            <button class="bottom-btn" id="bike-continue" onclick="showScreen('trail-screen')" disabled>SELECT BIKE</button>
+        </div>
+        
+        <!-- Trail Select -->
+        <div id="trail-screen" class="screen">
+            <div class="screen-title">Pick a Trail</div>
+            <div class="trail-list" id="trail-list"></div>
+            <button class="bottom-btn" id="trail-continue" onclick="startRide()" disabled>LET'S RIDE</button>
+        </div>
+        
+        <!-- Ride Screen -->
+        <div id="ride-screen" class="screen">
+            <div class="hud">
+                <div class="hud-stat">
+                    <div class="hud-value battery" id="hud-battery">100%</div>
+                    <div class="hud-label">Battery</div>
+                </div>
+                <div class="hud-stat">
+                    <div class="hud-value" id="hud-miles">0.0</div>
+                    <div class="hud-label">Miles</div>
+                </div>
+                <div class="hud-stat">
+                    <div class="hud-value" id="hud-time">0:00</div>
+                    <div class="hud-label">Time</div>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            
+            <div class="trail-view">
+                <div class="scenery" id="scenery"></div>
+                <div class="ground"></div>
+                <div class="trail-path"></div>
+                <div class="rider" id="rider">🏍️</div>
+                <div class="speed-display">
+                    <div class="speed-value" id="speed-value">0</div>
+                    <div class="speed-unit">MPH</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn btn-cruise" onclick="setMode('cruise')">🌱 Cruise</button>
+                <button class="control-btn btn-boost" onclick="setMode('boost')">⚡ Boost</button>
+                <button class="control-btn btn-turbo" onclick="setMode('turbo')">🚀 Turbo</button>
+            </div>
+            
+            <div class="event-popup" id="event-popup">
+                <div class="event-icon" id="event-icon">🦌</div>
+                <div class="event-text" id="event-text">A deer crosses the trail!</div>
+                <div class="event-effect" id="event-effect">-5% Battery</div>
+                <button class="event-btn" onclick="closeEvent()">Continue</button>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="results-title" id="results-title">🏁 Trail Complete!</div>
+            <div class="results-stats">
+                <div class="result-row">
+                    <span>Distance</span>
+                    <span class="result-value" id="result-miles">0 mi</span>
+                </div>
+                <div class="result-row">
+                    <span>Time</span>
+                    <span class="result-value" id="result-time">0:00</span>
+                </div>
+                <div class="result-row">
+                    <span>Battery Used</span>
+                    <span class="result-value" id="result-battery">0%</span>
+                </div>
+                <div class="result-row">
+                    <span>Top Speed</span>
+                    <span class="result-value" id="result-speed">0 mph</span>
+                </div>
+            </div>
+            <button class="play-btn" onclick="showScreen('trail-screen')">RIDE AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // TRAIL QUEST v2 - Simple Visual Game
+    // ============================================
+    
+    // Bikes
+    const BIKES = [
+        { id: 'revv1', name: 'Revv1 DRT', icon: '🚵', speed: 35, range: 45, desc: 'Balanced' },
+        { id: 's73', name: 'Super 73 RX', icon: '🏍️', speed: 30, range: 50, desc: 'Cruiser' },
+        { id: 'surron', name: 'Sur-Ron', icon: '🐝', speed: 50, range: 40, desc: 'Fast' },
+        { id: 'onyx', name: 'ONYX RCR', icon: '⚡', speed: 60, range: 35, desc: 'Speed Demon' }
+    ];
+    
+    // Trails
+    const TRAILS = [
+        { name: 'East Bay Path', length: 14, icon: '🌊', state: 'RI' },
+        { name: 'Minuteman Trail', length: 11, icon: '🏛️', state: 'MA' },
+        { name: 'Cape Cod Rail', length: 26, icon: '🌲', state: 'MA' },
+        { name: 'Burlington Path', length: 13, icon: '⛵', state: 'VT' },
+        { name: 'Eastern Trail', length: 29, icon: '🦞', state: 'ME' },
+        { name: 'Airline Trail', length: 50, icon: '✈️', state: 'CT' }
+    ];
+    
+    // Events
+    const EVENTS = [
+        { icon: '🦌', text: 'A deer crosses the trail!', battery: -3 },
+        { icon: '🚧', text: 'Trail construction ahead', battery: -5 },
+        { icon: '💨', text: 'Strong headwind!', battery: -4 },
+        { icon: '☀️', text: 'Perfect riding weather!', battery: 2 },
+        { icon: '🧑‍🤝‍🧑', text: 'Fellow rider gives you a boost!', battery: 5 },
+        { icon: '🌧️', text: 'Sudden rain shower', battery: -6 },
+        { icon: '⬇️', text: 'Nice downhill section!', battery: 3 },
+        { icon: '🏔️', text: 'Steep climb ahead', battery: -8 },
+        { icon: '🛖', text: 'Rest stop - quick recharge!', battery: 10 },
+        { icon: '🎉', text: 'Trail festival happening!', battery: 0 }
+    ];
+    
+    // Game State
+    let game = {
+        bike: null,
+        trail: null,
+        battery: 100,
+        miles: 0,
+        time: 0,
+        speed: 0,
+        mode: 'cruise',
+        topSpeed: 0,
+        running: false,
+        paused: false
+    };
+    
+    let gameLoop = null;
+    let treeSpawner = null;
+    
+    // Initialize
+    function init() {
+        renderBikes();
+        renderTrails();
+    }
+    
+    function renderBikes() {
+        const grid = document.getElementById('bike-grid');
+        grid.innerHTML = BIKES.map(bike => `
+            <div class="bike-card" onclick="selectBike('${bike.id}')">
+                <div class="bike-icon">${bike.icon}</div>
+                <div class="bike-name">${bike.name}</div>
+                <div class="bike-stats">${bike.desc} • ${bike.speed}mph • ${bike.range}mi</div>
+            </div>
+        `).join('');
+    }
+    
+    function renderTrails() {
+        const list = document.getElementById('trail-list');
+        list.innerHTML = TRAILS.map((trail, i) => `
+            <div class="trail-card" onclick="selectTrail(${i})">
+                <div class="trail-icon">${trail.icon}</div>
+                <div class="trail-info">
+                    <div class="trail-name">${trail.name}</div>
+                    <div class="trail-meta">${trail.state}</div>
+                </div>
+                <div class="trail-length">${trail.length} mi</div>
+            </div>
+        `).join('');
+    }
+    
+    function selectBike(id) {
+        game.bike = BIKES.find(b => b.id === id);
+        document.querySelectorAll('.bike-card').forEach(c => c.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        document.getElementById('bike-continue').disabled = false;
+    }
+    
+    function selectTrail(idx) {
+        game.trail = TRAILS[idx];
+        document.querySelectorAll('.trail-card').forEach(c => c.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+        document.getElementById('trail-continue').disabled = false;
+    }
+    
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+    
+    // Start Ride
+    function startRide() {
+        game.battery = 100;
+        game.miles = 0;
+        game.time = 0;
+        game.speed = 0;
+        game.topSpeed = 0;
+        game.mode = 'cruise';
+        game.running = true;
+        game.paused = false;
+        
+        showScreen('ride-screen');
+        startGameLoop();
+        startScenery();
+    }
+    
+    function startGameLoop() {
+        gameLoop = setInterval(() => {
+            if (game.paused) return;
+            
+            // Update speed based on mode
+            const targetSpeed = {
+                cruise: game.bike.speed * 0.5,
+                boost: game.bike.speed * 0.8,
+                turbo: game.bike.speed
+            }[game.mode];
+            
+            game.speed += (targetSpeed - game.speed) * 0.1;
+            if (game.speed > game.topSpeed) game.topSpeed = game.speed;
+            
+            // Update distance (speed in mph, tick every 100ms, so /36000)
+            const distanceIncrement = game.speed / 36000;
+            game.miles += distanceIncrement;
+            
+            // Battery drain based on mode
+            const drain = { cruise: 0.01, boost: 0.025, turbo: 0.05 }[game.mode];
+            // Adjust drain based on bike range (higher range = less drain)
+            const rangeFactor = 40 / game.bike.range;
+            game.battery -= drain * rangeFactor;
+            
+            // Update time
+            game.time += 0.1;
+            
+            // Random events (0.2% chance per tick)
+            if (Math.random() < 0.002) {
+                triggerEvent();
+            }
+            
+            // Update UI
+            updateHUD();
+            
+            // Check end conditions
+            if (game.miles >= game.trail.length) {
+                endRide(true);
+            } else if (game.battery <= 0) {
+                game.battery = 0;
+                endRide(false);
+            }
+            
+        }, 100);
+    }
+    
+    function startScenery() {
+        const scenery = document.getElementById('scenery');
+        scenery.innerHTML = '';
+        
+        treeSpawner = setInterval(() => {
+            if (game.paused || !game.running) return;
+            
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.textContent = ['🌲', '🌳', '🌴', '🪨', '🌿'][Math.floor(Math.random() * 5)];
+            tree.style.bottom = (Math.random() * 40) + '%';
+            tree.style.animationDuration = (3 + Math.random() * 2) + 's';
+            scenery.appendChild(tree);
+            
+            // Clean up old trees
+            setTimeout(() => tree.remove(), 6000);
+        }, 500);
+    }
+    
+    function updateHUD() {
+        const batteryEl = document.getElementById('hud-battery');
+        batteryEl.textContent = Math.round(game.battery) + '%';
+        batteryEl.className = 'hud-value battery' + 
+            (game.battery < 20 ? ' danger' : game.battery < 40 ? ' warning' : '');
+        
+        document.getElementById('hud-miles').textContent = game.miles.toFixed(1);
+        
+        const mins = Math.floor(game.time / 60);
+        const secs = Math.floor(game.time % 60);
+        document.getElementById('hud-time').textContent = mins + ':' + secs.toString().padStart(2, '0');
+        
+        document.getElementById('speed-value').textContent = Math.round(game.speed);
+        
+        const progress = (game.miles / game.trail.length) * 100;
+        document.getElementById('progress-fill').style.width = progress + '%';
+    }
+    
+    function setMode(mode) {
+        game.mode = mode;
+        const rider = document.getElementById('rider');
+        rider.classList.add('boost');
+        setTimeout(() => rider.classList.remove('boost'), 300);
+    }
+    
+    function triggerEvent() {
+        game.paused = true;
+        
+        const event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+        
+        document.getElementById('event-icon').textContent = event.icon;
+        document.getElementById('event-text').textContent = event.text;
+        
+        const effectEl = document.getElementById('event-effect');
+        if (event.battery > 0) {
+            effectEl.textContent = '+' + event.battery + '% Battery';
+            effectEl.className = 'event-effect';
+        } else if (event.battery < 0) {
+            effectEl.textContent = event.battery + '% Battery';
+            effectEl.className = 'event-effect bad';
+        } else {
+            effectEl.textContent = 'No effect';
+            effectEl.className = 'event-effect';
+        }
+        
+        game.battery = Math.max(0, Math.min(100, game.battery + event.battery));
+        
+        document.getElementById('event-popup').classList.add('show');
+    }
+    
+    function closeEvent() {
+        document.getElementById('event-popup').classList.remove('show');
+        game.paused = false;
+    }
+    
+    function endRide(completed) {
+        game.running = false;
+        clearInterval(gameLoop);
+        clearInterval(treeSpawner);
+        
+        document.getElementById('results-title').textContent = 
+            completed ? '🏁 Trail Complete!' : '🔋 Out of Juice!';
+        document.getElementById('result-miles').textContent = game.miles.toFixed(1) + ' mi';
+        
+        const mins = Math.floor(game.time / 60);
+        const secs = Math.floor(game.time % 60);
+        document.getElementById('result-time').textContent = mins + ':' + secs.toString().padStart(2, '0');
+        
+        document.getElementById('result-battery').textContent = Math.round(100 - game.battery) + '%';
+        document.getElementById('result-speed').textContent = Math.round(game.topSpeed) + ' mph';
+        
+        showScreen('results-screen');
+    }
+    
+    // Init on load
+    init();
+    </script>
+</body>
+</html>
