@@ -299,15 +299,21 @@
         
         .control-btn {
             flex: 1;
-            padding: 20px;
-            border: none;
+            padding: 15px 10px;
+            border: 3px solid transparent;
             border-radius: 15px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: all 0.2s;
+            opacity: 0.6;
         }
         .control-btn:active { transform: scale(0.95); }
+        .control-btn.active { 
+            opacity: 1;
+            transform: scale(1.05);
+            border-color: #fff;
+        }
         
         .btn-cruise {
             background: var(--blue);
@@ -321,6 +327,22 @@
             background: var(--orange);
             color: var(--dark);
         }
+        
+        /* Mode indicator */
+        .mode-display {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: rgba(0,0,0,0.7);
+        }
+        .mode-display.cruise { color: var(--blue); }
+        .mode-display.boost { color: var(--green); }
+        .mode-display.turbo { color: var(--orange); }
         
         /* Event Popup */
         .event-popup {
@@ -434,6 +456,8 @@
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill"></div>
             </div>
+            
+            <div class="mode-display cruise" id="mode-display">🌱 CRUISE</div>
             
             <div class="trail-view">
                 <div class="scenery" id="scenery"></div>
@@ -601,6 +625,13 @@
         game.paused = false;
         
         showScreen('ride-screen');
+        
+        // Set initial mode display
+        document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('.btn-cruise').classList.add('active');
+        document.getElementById('mode-display').textContent = '🌱 CRUISE';
+        document.getElementById('mode-display').className = 'mode-display cruise';
+        
         startGameLoop();
         startScenery();
     }
@@ -690,6 +721,22 @@
     
     function setMode(mode) {
         game.mode = mode;
+        
+        // Update button highlights
+        document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector('.btn-' + mode).classList.add('active');
+        
+        // Update mode display
+        const modeDisplay = document.getElementById('mode-display');
+        const modeInfo = {
+            cruise: { icon: '🌱', name: 'CRUISE', class: 'cruise' },
+            boost: { icon: '⚡', name: 'BOOST', class: 'boost' },
+            turbo: { icon: '🚀', name: 'TURBO', class: 'turbo' }
+        }[mode];
+        modeDisplay.textContent = modeInfo.icon + ' ' + modeInfo.name;
+        modeDisplay.className = 'mode-display ' + modeInfo.class;
+        
+        // Rider animation
         const rider = document.getElementById('rider');
         rider.classList.add('boost');
         setTimeout(() => rider.classList.remove('boost'), 300);
