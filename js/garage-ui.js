@@ -318,14 +318,22 @@ function renderComponentShop(type) {
     let title = '';
     let currentId = '';
     
+    // Get current battery voltage for controller filtering
+    const currentBattery = build.battery ? BATTERIES[build.battery] : null;
+    const currentVoltage = currentBattery ? currentBattery.voltage : 52;
+    
     switch(type) {
         case 'controller':
             title = '🎛️ Controllers';
             currentId = build.controller;
-            items = Object.values(CONTROLLERS).filter(c => 
-                c.price > 0 && 
-                bike.compatibleVoltages.includes(c.voltage)
-            );
+            // Show controllers that work with current battery voltage OR bike's compatible voltages
+            items = Object.values(CONTROLLERS).filter(c => {
+                if (c.price <= 0) return false;
+                const voltages = c.voltageRange || [c.voltage];
+                // Controller works if it supports current battery voltage
+                return voltages.includes(currentVoltage) || 
+                       voltages.some(v => bike.compatibleVoltages.includes(v));
+            });
             break;
         case 'battery':
             title = '🔋 Batteries';
@@ -357,7 +365,7 @@ function renderComponentShop(type) {
                     </div>
                     ${type === 'controller' ? `
                         <div class="shop-item-specs">
-                            ${item.voltage}V • ${item.peakAmps}A peak
+                            ${item.voltageRange ? item.voltageRange[0] + '-' + item.voltageRange[item.voltageRange.length-1] + 'V' : item.voltage + 'V'} • ${item.peakAmps}A peak
                             ${item.bluetooth ? '• BT' : ''}
                         </div>
                     ` : ''}

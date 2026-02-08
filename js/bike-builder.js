@@ -207,7 +207,7 @@ const CONTROLLERS = {
         stats: { power: 1, efficiency: 0.7, control: 0.6 }
     },
 
-    // FARDRIVER Controllers
+    // FARDRIVER Controllers (48-72V compatible - realistic!)
     nd72450: {
         id: 'nd72450',
         name: 'Fardriver ND72450',
@@ -215,12 +215,13 @@ const CONTROLLERS = {
         icon: '🎛️',
         price: 450,
         voltage: 72,
+        voltageRange: [48, 52, 60, 72], // Fardrivers work 48-72V!
         peakAmps: 450,
         continuousAmps: 200,
         programmable: true,
         bluetooth: true,
         features: ['regen', 'field_weakening', 'cruise', 'reverse'],
-        description: 'Popular choice for mid-builds. 450A peak, Bluetooth programmable.',
+        description: '48-72V compatible. 450A peak, Bluetooth programmable.',
         stats: { power: 2.2, efficiency: 0.88, control: 0.85 }
     },
     nd72680: {
@@ -230,12 +231,13 @@ const CONTROLLERS = {
         icon: '🎛️',
         price: 650,
         voltage: 72,
+        voltageRange: [48, 52, 60, 72],
         peakAmps: 680,
         continuousAmps: 350,
         programmable: true,
         bluetooth: true,
         features: ['regen', 'field_weakening', 'cruise', 'reverse', 'temp_sensor'],
-        description: 'High-power beast. 680A peak for serious builds.',
+        description: '48-72V compatible. 680A peak for serious builds.',
         stats: { power: 3.0, efficiency: 0.90, control: 0.88 }
     },
     nd84850: {
@@ -245,12 +247,13 @@ const CONTROLLERS = {
         icon: '🎛️',
         price: 850,
         voltage: 96,
+        voltageRange: [72, 84, 96], // Higher voltage range
         peakAmps: 850,
         continuousAmps: 400,
         programmable: true,
         bluetooth: true,
         features: ['regen', 'field_weakening', 'cruise', 'reverse', 'temp_sensor', 'multi_mode'],
-        description: '96V monster. 850A peak for extreme builds.',
+        description: '72-96V compatible. 850A peak for extreme builds.',
         stats: { power: 4.0, efficiency: 0.92, control: 0.90 }
     },
     
@@ -373,6 +376,40 @@ const BATTERIES = {
         range: 35,
         weight: 16,
         stats: { range: 1.0, power: 0.75, weight: 1.1 }
+    },
+
+    // Upgrade batteries - 52V (for stock bike upgrades)
+    battery_52v_25ah: {
+        id: 'battery_52v_25ah',
+        name: '52V 25Ah Pack',
+        brand: 'Unit Pack Power',
+        icon: '🔋',
+        price: 600,
+        voltage: 52,
+        capacity: 25,
+        wh: 1300,
+        chemistry: '21700 Samsung 50E',
+        maxDischarge: 50,
+        range: 45,
+        weight: 15,
+        description: 'Solid 52V upgrade. More range, same voltage.',
+        stats: { range: 1.3, power: 0.85, weight: 1.1 }
+    },
+    battery_52v_35ah: {
+        id: 'battery_52v_35ah',
+        name: '52V 35Ah Pack',
+        brand: 'Unit Pack Power',
+        icon: '🔋',
+        price: 900,
+        voltage: 52,
+        capacity: 35,
+        wh: 1820,
+        chemistry: '21700 Samsung 50E',
+        maxDischarge: 60,
+        range: 60,
+        weight: 20,
+        description: 'Big 52V pack. Serious range upgrade.',
+        stats: { range: 1.7, power: 1.0, weight: 1.2 }
     },
 
     // Upgrade batteries - 72V
@@ -646,8 +683,10 @@ function checkCompatibility(bike, controller, battery, motor) {
         errors.push(`Frame not rated for ${batteryData.voltage}V`);
     }
     
-    if (controllerData.voltage !== batteryData.voltage) {
-        errors.push(`Controller (${controllerData.voltage}V) doesn't match battery (${batteryData.voltage}V)`);
+    // Check controller voltage compatibility (some controllers support ranges)
+    const controllerVoltages = controllerData.voltageRange || [controllerData.voltage];
+    if (!controllerVoltages.includes(batteryData.voltage)) {
+        errors.push(`Controller (${controllerData.voltageRange ? controllerData.voltageRange.join('-') + 'V' : controllerData.voltage + 'V'}) doesn't match battery (${batteryData.voltage}V)`);
     }
     
     // Power limits
