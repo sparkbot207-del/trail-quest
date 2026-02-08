@@ -47,6 +47,10 @@ function renderGarage() {
                             ⚙️ Upgrade Motor
                             <span class="choice-cost">Speed & Torque</span>
                         </button>
+                        <button class="choice-btn warning" onclick="openPartsShop()">
+                            🏪 Parts Shop
+                            <span class="choice-cost">Radmoto USA & more</span>
+                        </button>
                         <button class="choice-btn secondary" onclick="backToHub()">
                             ⬅️ Back to Trail Hub
                         </button>
@@ -60,6 +64,202 @@ function renderGarage() {
             ${renderAchievementsPanel()}
         </div>
     `;
+}
+
+// ===================
+// PARTS SHOP
+// ===================
+
+function renderPartsShop() {
+    const shop = SHOPS.radmoto; // Default to Radmoto
+    
+    const categories = {};
+    shop.inventory.forEach(itemId => {
+        const item = RADMOTO_INVENTORY[itemId];
+        if (item) {
+            const cat = item.category || 'misc';
+            if (!categories[cat]) categories[cat] = [];
+            categories[cat].push(item);
+        }
+    });
+    
+    let itemsHtml = '';
+    for (const [category, items] of Object.entries(categories)) {
+        itemsHtml += `
+            <div class="shop-category">
+                <h4 style="color: var(--secondary); text-transform: uppercase; margin: 20px 0 10px; font-size: 0.8rem;">
+                    ${category}
+                </h4>
+                ${items.map(item => {
+                    const price = shop.discount ? Math.floor(item.price * (1 - shop.discount)) : item.price;
+                    const canAfford = (game.money || 0) >= price;
+                    const owned = (game.ownedParts || []).includes(item.id);
+                    
+                    return `
+                        <div class="shop-item ${owned ? 'owned' : ''} ${!canAfford && !owned ? 'unaffordable' : ''}" 
+                             onclick="${owned || !canAfford ? '' : `buyPart('${item.id}', ${price})`}">
+                            <div class="shop-item-icon">${item.icon}</div>
+                            <div class="shop-item-info">
+                                <div class="shop-item-name">${item.name}</div>
+                                <div class="shop-item-desc">${item.description}</div>
+                                <div class="shop-item-brand" style="font-size: 0.75rem; color: var(--text-dim);">
+                                    ${item.brand}
+                                </div>
+                            </div>
+                            <div class="shop-item-price">
+                                ${owned ? '✓ OWNED' : `$${price}`}
+                                ${shop.discount && !owned ? `<br><span style="font-size: 0.6rem; color: var(--primary);">10% OFF!</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    }
+
+    return `
+        <div class="left-panel">
+            ${renderMoneyPanel()}
+            ${renderOwnedPartsPanel()}
+        </div>
+
+        <div class="main-screen">
+            <div class="game-screen">
+                <div class="screen-header">
+                    <span class="screen-title">${shop.icon} ${shop.name}</span>
+                    <span class="screen-subtitle">${shop.location}</span>
+                </div>
+                <div class="screen-content">
+                    <p class="narrative">${shop.description}</p>
+                    ${shop.featured ? `
+                        <div class="event-box gold">
+                            <div class="event-title">⭐ FEATURED PARTNER</div>
+                            <p>10% discount on all parts! Real shop: <a href="${shop.url}" target="_blank" style="color: var(--gold);">${shop.url}</a></p>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 20px;">
+                        ${itemsHtml}
+                    </div>
+
+                    <div class="choices" style="margin-top: 25px;">
+                        <button class="choice-btn secondary" onclick="goToGarage()">
+                            ⬅️ Back to Garage
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            ${renderShopInfo(shop)}
+            ${renderAchievementsPanel()}
+        </div>
+    `;
+}
+
+function renderOwnedPartsPanel() {
+    const owned = game.ownedParts || [];
+    if (owned.length === 0) {
+        return `
+            <div class="panel">
+                <div class="panel-header">
+                    <span class="panel-title">🎒 Owned Parts</span>
+                </div>
+                <p style="color: var(--text-dim); text-align: center; padding: 15px; font-size: 0.85rem;">
+                    No parts yet - shop the upgrades!
+                </p>
+            </div>
+        `;
+    }
+    
+    return `
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">🎒 Owned Parts</span>
+                <span style="color: var(--text-dim);">${owned.length}</span>
+            </div>
+            <div style="max-height: 150px; overflow-y: auto;">
+                ${owned.map(id => {
+                    const item = RADMOTO_INVENTORY[id];
+                    return item ? `
+                        <div style="display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--border);">
+                            <span>${item.icon}</span>
+                            <span style="font-size: 0.8rem;">${item.name}</span>
+                        </div>
+                    ` : '';
+                }).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function renderShopInfo(shop) {
+    return `
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">ℹ️ Shop Info</span>
+            </div>
+            <div style="font-size: 0.85rem; line-height: 1.6;">
+                <p style="color: var(--primary); font-weight: 600;">${shop.name}</p>
+                <p style="color: var(--text-dim);">📍 ${shop.location}</p>
+                ${shop.url ? `
+                    <p style="margin-top: 10px;">
+                        <a href="${shop.url}" target="_blank" style="color: var(--secondary);">
+                            🌐 Visit Real Shop
+                        </a>
+                    </p>
+                ` : ''}
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
+                    <p style="color: var(--text-dim); font-size: 0.8rem;">
+                        Parts give your bike bonuses! Wheels improve handling, suspension helps off-road, brakes keep you safe.
+                    </p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function openPartsShop() {
+    game.screen = 'parts_shop';
+    render();
+}
+
+function buyPart(partId, price) {
+    const part = RADMOTO_INVENTORY[partId];
+    if (!part || (game.money || 0) < price) return;
+    
+    game.money -= price;
+    game.ownedParts = game.ownedParts || [];
+    game.ownedParts.push(partId);
+    
+    // Apply part effects to bike
+    if (part.effect && game.bike) {
+        applyPartEffect(part.effect);
+    }
+    
+    game.buildLog = game.buildLog || [];
+    game.buildLog.push({
+        component: part.name,
+        action: `Installed from ${part.brand}`
+    });
+    
+    game.stats.itemsBought = (game.stats.itemsBought || 0) + 1;
+    
+    playSound('buy');
+    saveGame();
+    render();
+}
+
+function applyPartEffect(effect) {
+    // Parts give percentage bonuses to bike stats
+    if (!game.bike || !game.bike.bonuses) return;
+    
+    if (effect.speed) game.bike.speed = Math.round(game.bike.speed * effect.speed);
+    if (effect.range) game.bike.range = Math.round(game.bike.range * effect.range);
+    if (effect.handling) game.bike.bonuses.handling = (game.bike.bonuses.handling || 1) * effect.handling;
+    if (effect.offroad) game.bike.bonuses.climbing = (game.bike.bonuses.climbing || 1) * effect.offroad;
+    if (effect.comfort) game.bike.bonuses.efficiency = (game.bike.bonuses.efficiency || 1) * effect.comfort;
 }
 
 function renderNoBike() {

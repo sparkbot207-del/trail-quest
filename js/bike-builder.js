@@ -851,6 +851,361 @@ const EARNINGS = {
 };
 
 // ===================
+// RADMOTO USA SHOP INVENTORY
+// Real brands they carry with realistic pricing
+// ===================
+
+const RADMOTO_INVENTORY = {
+    // ACCESSORIES & GEAR
+    gritshift_grips: {
+        id: 'gritshift_grips',
+        name: 'Gritshift Lock-On Grips',
+        brand: 'Gritshift',
+        category: 'accessories',
+        price: 45,
+        icon: '🏍️',
+        description: 'Premium lock-on grips. Better control, less fatigue.',
+        effect: { control: 1.05, comfort: 1.1 }
+    },
+    gritshift_pegs: {
+        id: 'gritshift_pegs',
+        name: 'Gritshift Footpegs',
+        brand: 'Gritshift',
+        category: 'accessories',
+        price: 85,
+        icon: '🦶',
+        description: 'CNC aluminum pegs with aggressive grip.',
+        effect: { control: 1.08 }
+    },
+    radmoto_handguards: {
+        id: 'radmoto_handguards',
+        name: 'Radmoto Handguards',
+        brand: 'Radmoto',
+        category: 'accessories',
+        price: 65,
+        icon: '🛡️',
+        description: 'Protect your controls on the trails.',
+        effect: { durability: 1.15 }
+    },
+    
+    // WHEELS
+    warp9_supermoto_front: {
+        id: 'warp9_supermoto_front',
+        name: 'Warp 9 Supermoto Front Wheel',
+        brand: 'Warp 9',
+        category: 'wheels',
+        price: 425,
+        icon: '🛞',
+        description: '17" supermoto wheel. Street performance upgrade.',
+        effect: { speed: 1.1, handling: 1.15 }
+    },
+    warp9_supermoto_rear: {
+        id: 'warp9_supermoto_rear',
+        name: 'Warp 9 Supermoto Rear Wheel',
+        brand: 'Warp 9',
+        category: 'wheels',
+        price: 475,
+        icon: '🛞',
+        description: '17" supermoto rear. Complete the set.',
+        effect: { speed: 1.1, traction: 1.1 }
+    },
+    warp9_supermoto_set: {
+        id: 'warp9_supermoto_set',
+        name: 'Warp 9 Supermoto Wheelset',
+        brand: 'Warp 9',
+        category: 'wheels',
+        price: 850,
+        icon: '🛞',
+        description: 'Front + rear 17" supermoto wheels. Street beast mode.',
+        effect: { speed: 1.15, handling: 1.2, style: 1.1 }
+    },
+    kke_mx_wheelset: {
+        id: 'kke_mx_wheelset',
+        name: 'KKE MX Wheelset 19/16',
+        brand: 'KKE',
+        category: 'wheels',
+        price: 550,
+        icon: '🛞',
+        description: 'Off-road focused wheelset. Dirt ready.',
+        effect: { offroad: 1.2, durability: 1.1 }
+    },
+    
+    // SUSPENSION
+    dnm_volcano_rear: {
+        id: 'dnm_volcano_rear',
+        name: 'DNM Volcano Rear Shock',
+        brand: 'DNM',
+        category: 'suspension',
+        price: 280,
+        icon: '🔧',
+        description: 'Adjustable rear shock. Better bump absorption.',
+        effect: { comfort: 1.2, offroad: 1.15 }
+    },
+    rst_killah_fork: {
+        id: 'rst_killah_fork',
+        name: 'RST Killah Pro Fork',
+        brand: 'RST',
+        category: 'suspension',
+        price: 350,
+        icon: '🔧',
+        description: 'Inverted fork upgrade. Stiffer, more precise.',
+        effect: { handling: 1.15, offroad: 1.1 }
+    },
+    fastace_fork: {
+        id: 'fastace_fork',
+        name: 'Fastace ALX-13 RC Fork',
+        brand: 'Fastace',
+        category: 'suspension',
+        price: 650,
+        icon: '🔧',
+        description: 'Premium inverted fork. Race-proven performance.',
+        effect: { handling: 1.25, offroad: 1.2, comfort: 1.15 }
+    },
+    
+    // BRAKES
+    magura_mt5e: {
+        id: 'magura_mt5e',
+        name: 'Magura MT5e Brake Set',
+        brand: 'Magura',
+        category: 'brakes',
+        price: 320,
+        icon: '🛑',
+        description: 'E-bike specific hydraulic brakes. Serious stopping power.',
+        effect: { braking: 1.3, safety: 1.2 }
+    },
+    galfer_rotors: {
+        id: 'galfer_rotors',
+        name: 'Galfer Wave Rotor Set',
+        brand: 'Galfer',
+        category: 'brakes',
+        price: 145,
+        icon: '💿',
+        description: 'Floating wave rotors. Better heat dissipation.',
+        effect: { braking: 1.15 }
+    },
+    
+    // TITANIUM PARTS
+    ti_axle_set: {
+        id: 'ti_axle_set',
+        name: 'Titanium Axle Set',
+        brand: 'Titanium Surron',
+        category: 'titanium',
+        price: 185,
+        icon: '✨',
+        description: 'Lightweight titanium axles. Weight savings.',
+        effect: { weight: 0.98, style: 1.05 }
+    },
+    ti_footpeg_pins: {
+        id: 'ti_footpeg_pins',
+        name: 'Titanium Footpeg Pins',
+        brand: 'Titanium Surron',
+        category: 'titanium',
+        price: 95,
+        icon: '✨',
+        description: 'Titanium hardware. Bling that saves weight.',
+        effect: { weight: 0.99, style: 1.03 }
+    },
+    ti_bolt_kit: {
+        id: 'ti_bolt_kit',
+        name: 'Titanium Bolt Kit',
+        brand: 'Titanium Surron',
+        category: 'titanium',
+        price: 275,
+        icon: '✨',
+        description: 'Full titanium hardware kit. Max weight savings.',
+        effect: { weight: 0.95, style: 1.1 }
+    },
+    
+    // BODY & COVERS
+    sirris_body_kit: {
+        id: 'sirris_body_kit',
+        name: 'Sirris Full Body Kit',
+        brand: 'Sirris',
+        category: 'body',
+        price: 450,
+        icon: '🎨',
+        description: 'Complete plastics replacement. Fresh look.',
+        effect: { style: 1.25, durability: 1.1 }
+    },
+    dirtybike_bash_guard: {
+        id: 'dirtybike_bash_guard',
+        name: 'DirtyBike Bash Guard',
+        brand: 'DirtyBike',
+        category: 'protection',
+        price: 125,
+        icon: '🛡️',
+        description: 'Protect your battery and motor from rocks.',
+        effect: { durability: 1.2 }
+    },
+    
+    // LIGHTS & ELECTRICAL
+    baja_squadron_pro: {
+        id: 'baja_squadron_pro',
+        name: 'Baja Squadron Pro LED',
+        brand: 'Baja Designs',
+        category: 'lights',
+        price: 285,
+        icon: '💡',
+        description: 'Serious off-road lighting. See everything.',
+        effect: { nightRiding: true, visibility: 1.5 }
+    },
+    tb_display: {
+        id: 'tb_display',
+        name: 'TB Electric Display',
+        brand: 'TB Electric',
+        category: 'electrical',
+        price: 165,
+        icon: '📟',
+        description: 'Color display with speed, battery, power stats.',
+        effect: { info: true }
+    },
+    nucular_display: {
+        id: 'nucular_display',
+        name: 'Nucular Display Unit',
+        brand: 'Nucular',
+        category: 'electrical',
+        price: 220,
+        icon: '📟',
+        description: 'Advanced display with Bluetooth connectivity.',
+        effect: { info: true, bluetooth: true }
+    },
+    
+    // TIRES
+    shinko_244_set: {
+        id: 'shinko_244_set',
+        name: 'Shinko 244 Tire Set',
+        brand: 'Shinko',
+        category: 'tires',
+        price: 120,
+        icon: '⭕',
+        description: 'Dual-sport tires. Good on and off road.',
+        effect: { traction: 1.1, versatility: 1.15 }
+    },
+    maxxis_dth_set: {
+        id: 'maxxis_dth_set',
+        name: 'Maxxis DTH Street Tire Set',
+        brand: 'Maxxis',
+        category: 'tires',
+        price: 95,
+        icon: '⭕',
+        description: 'Street-focused tires. Maximum grip on pavement.',
+        effect: { speed: 1.05, handling: 1.1 }
+    },
+    kenda_mx_set: {
+        id: 'kenda_mx_set',
+        name: 'Kenda Washougal MX Tire Set',
+        brand: 'Kenda',
+        category: 'tires',
+        price: 110,
+        icon: '⭕',
+        description: 'Aggressive knobby tires. Dirt dominance.',
+        effect: { offroad: 1.2, traction: 1.15 }
+    },
+    
+    // SEATS
+    selle_seat: {
+        id: 'selle_seat',
+        name: 'Selle Comfort Seat',
+        brand: 'Selle',
+        category: 'seat',
+        price: 85,
+        icon: '🪑',
+        description: 'Ergonomic seat upgrade. Longer rides, less pain.',
+        effect: { comfort: 1.2, range: 1.05 }
+    },
+    
+    // CHARGERS
+    fast_charger_10a: {
+        id: 'fast_charger_10a',
+        name: '72V 10A Fast Charger',
+        brand: 'Generic',
+        category: 'charger',
+        price: 175,
+        icon: '🔌',
+        description: 'Charge 3x faster than stock. Get back riding.',
+        effect: { chargeSpeed: 3.0 }
+    },
+    fast_charger_15a: {
+        id: 'fast_charger_15a',
+        name: '72V 15A Rapid Charger',
+        brand: 'Generic',
+        category: 'charger',
+        price: 285,
+        icon: '🔌',
+        description: 'Blazing fast charging. 0-80% in under an hour.',
+        effect: { chargeSpeed: 5.0 }
+    }
+};
+
+// ===================
+// SHOP DEFINITIONS
+// ===================
+
+const SHOPS = {
+    radmoto: {
+        id: 'radmoto',
+        name: 'Radmoto USA',
+        location: 'Portsmouth, NH',
+        icon: '🏪',
+        featured: true,
+        discount: 0.10, // 10% off featured partner
+        description: 'Premier e-moto dealer with expert service. Sur-Ron, ONYX, Talaria specialists.',
+        url: 'https://radmotousa.com',
+        inventory: [
+            // Accessories
+            'gritshift_grips', 'gritshift_pegs', 'radmoto_handguards',
+            // Wheels
+            'warp9_supermoto_set', 'kke_mx_wheelset',
+            // Suspension
+            'dnm_volcano_rear', 'rst_killah_fork', 'fastace_fork',
+            // Brakes
+            'magura_mt5e', 'galfer_rotors',
+            // Body & Protection
+            'sirris_body_kit', 'dirtybike_bash_guard',
+            // Electrical
+            'baja_squadron_pro', 'tb_display', 'nucular_display',
+            // Tires
+            'shinko_244_set', 'maxxis_dth_set', 'kenda_mx_set',
+            // Chargers
+            'fast_charger_10a', 'fast_charger_15a'
+        ]
+    },
+    lunacycle: {
+        id: 'lunacycle',
+        name: 'Luna Cycle',
+        location: 'Online',
+        icon: '🌙',
+        description: 'E-bike specialists. Batteries, kits, and Sur-Ron/Talaria parts.',
+        url: 'https://lunacycle.com',
+        inventory: [
+            'warp9_supermoto_front', 'warp9_supermoto_rear',
+            'dnm_volcano_rear', 'magura_mt5e',
+            'shinko_244_set', 'fast_charger_10a'
+        ]
+    },
+    titanium_specialist: {
+        id: 'titanium_specialist',
+        name: 'Titanium Specialist',
+        location: 'Online',
+        icon: '✨',
+        description: 'Lightweight titanium parts for weight-conscious builders.',
+        inventory: [
+            'ti_axle_set', 'ti_footpeg_pins', 'ti_bolt_kit'
+        ]
+    },
+    trailside: {
+        id: 'trailside',
+        name: 'Trailside Stop',
+        location: 'Various Trailheads',
+        icon: '🏕️',
+        description: 'Basic supplies at trailheads. Limited but convenient.',
+        inventory: [
+            'shinko_244_set', 'gritshift_grips', 'selle_seat'
+        ]
+    }
+};
+
+// ===================
 // EXPORT
 // ===================
 
