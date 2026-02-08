@@ -253,13 +253,43 @@ function buyPart(partId, price) {
 
 function applyPartEffect(effect) {
     // Parts give percentage bonuses to bike stats
-    if (!game.bike || !game.bike.bonuses) return;
+    if (!game.bike) return;
+    game.bike.bonuses = game.bike.bonuses || {};
     
+    // Direct stat changes
     if (effect.speed) game.bike.speed = Math.round(game.bike.speed * effect.speed);
     if (effect.range) game.bike.range = Math.round(game.bike.range * effect.range);
+    if (effect.weight) game.bike.weight = Math.round(game.bike.weight * effect.weight);
+    
+    // Handling & Control
     if (effect.handling) game.bike.bonuses.handling = (game.bike.bonuses.handling || 1) * effect.handling;
+    if (effect.control) game.bike.bonuses.handling = (game.bike.bonuses.handling || 1) * effect.control;
+    
+    // Offroad & Traction
     if (effect.offroad) game.bike.bonuses.climbing = (game.bike.bonuses.climbing || 1) * effect.offroad;
+    if (effect.traction) game.bike.bonuses.climbing = (game.bike.bonuses.climbing || 1) * effect.traction;
+    
+    // Comfort & Efficiency (less battery drain)
     if (effect.comfort) game.bike.bonuses.efficiency = (game.bike.bonuses.efficiency || 1) * effect.comfort;
+    
+    // Braking & Safety (better event outcomes)
+    if (effect.braking) game.bike.bonuses.safety = (game.bike.bonuses.safety || 1) * effect.braking;
+    if (effect.safety) game.bike.bonuses.safety = (game.bike.bonuses.safety || 1) * effect.safety;
+    
+    // Durability (less random breakdowns)
+    if (effect.durability) game.bike.bonuses.durability = (game.bike.bonuses.durability || 1) * effect.durability;
+    
+    // Style (bonus points, better encounters)
+    if (effect.style) game.bike.bonuses.style = (game.bike.bonuses.style || 1) * effect.style;
+    
+    // Special abilities
+    if (effect.nightRiding) game.bike.bonuses.nightRiding = true;
+    if (effect.visibility) game.bike.bonuses.visibility = (game.bike.bonuses.visibility || 1) * effect.visibility;
+    if (effect.info) game.bike.bonuses.display = true;
+    if (effect.bluetooth) game.bike.bonuses.bluetooth = true;
+    
+    // Recalculate game bike to reflect changes
+    console.log('Part effect applied:', effect, 'New bonuses:', game.bike.bonuses);
 }
 
 function renderNoBike() {
