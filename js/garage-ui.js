@@ -71,7 +71,7 @@ function renderGarage() {
 // ===================
 
 function renderPartsShop() {
-    const shop = SHOPS.radmoto; // Default to Radmoto
+    const shop = PART_SHOPS.radmoto; // Default to Radmoto
     
     const categories = {};
     shop.inventory.forEach(itemId => {

@@ -1141,7 +1141,7 @@ const RADMOTO_INVENTORY = {
 // SHOP DEFINITIONS
 // ===================
 
-const SHOPS = {
+const PART_SHOPS = {
     radmoto: {
         id: 'radmoto',
         name: 'Radmoto USA',
