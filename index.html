@@ -1445,10 +1445,19 @@
     // ===================
 
     async function init() {
-        await loadTrailData();
-        checkForSavedGame();
-        generateWeather();
-        render();
+        try {
+            console.log('init() starting...');
+            await loadTrailData();
+            console.log('Trails loaded:', TRAILS.length);
+            checkForSavedGame();
+            generateWeather();
+            console.log('About to render, screen:', game.screen);
+            render();
+            console.log('render() completed');
+        } catch (e) {
+            console.error('init() error:', e);
+            document.getElementById('game-content').innerHTML = `<div style="padding:20px;color:red;">Error: ${e.message}<br><pre>${e.stack}</pre></div>`;
+        }
     }
 
     async function loadTrailData() {
@@ -1485,38 +1494,47 @@
     // ===================
 
     function render() {
-        const content = document.getElementById('game-content');
-        const headerStats = document.getElementById('header-stats');
-        const headerActions = document.getElementById('header-actions');
+        try {
+            const content = document.getElementById('game-content');
+            const headerStats = document.getElementById('header-stats');
+            const headerActions = document.getElementById('header-actions');
 
-        // Show/hide header elements based on screen
-        const showUI = !['start', 'select_bike'].includes(game.screen);
-        headerStats.style.display = showUI ? 'flex' : 'none';
-        headerActions.style.display = showUI ? 'flex' : 'none';
+            // Show/hide header elements based on screen
+            const showUI = !['start', 'select_bike'].includes(game.screen);
+            headerStats.style.display = showUI ? 'flex' : 'none';
+            headerActions.style.display = showUI ? 'flex' : 'none';
 
-        // Update header stats
-        if (showUI) {
-            document.getElementById('stat-score').textContent = game.score;
-            document.getElementById('stat-miles').textContent = game.totalMiles.toFixed(1);
-            document.getElementById('stat-trails').textContent = game.stats.trailsCompleted;
-            document.getElementById('stat-day').textContent = game.day;
-        }
+            // Update header stats
+            if (showUI) {
+                document.getElementById('stat-score').textContent = game.score;
+                document.getElementById('stat-miles').textContent = game.totalMiles.toFixed(1);
+                document.getElementById('stat-trails').textContent = game.stats.trailsCompleted;
+                document.getElementById('stat-day').textContent = game.day;
+            }
 
-        // Render screen
-        switch (game.screen) {
-            case 'start': content.innerHTML = renderStartScreen(); break;
-            case 'select_bike': content.innerHTML = renderBikeSelect(); break;
-            case 'starter_select': content.innerHTML = renderStarterSelect(); break;
-            case 'garage': content.innerHTML = renderGarage(); break;
-            case 'component_shop': content.innerHTML = renderComponentShop(game.shopType); break;
-            case 'parts_shop': content.innerHTML = renderPartsShop(); break;
-            case 'hub': content.innerHTML = renderHub(); break;
-            case 'riding': content.innerHTML = renderRiding(); break;
-            case 'event': content.innerHTML = renderEvent(); break;
-            case 'trail_complete': content.innerHTML = renderTrailComplete(); break;
-            case 'shop': content.innerHTML = renderShop(); break;
-            case 'charging': content.innerHTML = renderCharging(); break;
-            case 'gameover': content.innerHTML = renderGameOver(); break;
+            console.log('Rendering screen:', game.screen);
+
+            // Render screen
+            switch (game.screen) {
+                case 'start': content.innerHTML = renderStartScreen(); break;
+                case 'select_bike': content.innerHTML = renderBikeSelect(); break;
+                case 'starter_select': content.innerHTML = renderStarterSelect(); break;
+                case 'garage': content.innerHTML = renderGarage(); break;
+                case 'component_shop': content.innerHTML = renderComponentShop(game.shopType); break;
+                case 'parts_shop': content.innerHTML = renderPartsShop(); break;
+                case 'hub': content.innerHTML = renderHub(); break;
+                case 'riding': content.innerHTML = renderRiding(); break;
+                case 'event': content.innerHTML = renderEvent(); break;
+                case 'trail_complete': content.innerHTML = renderTrailComplete(); break;
+                case 'shop': content.innerHTML = renderShop(); break;
+                case 'charging': content.innerHTML = renderCharging(); break;
+                case 'gameover': content.innerHTML = renderGameOver(); break;
+                default: content.innerHTML = `<div style="padding:20px;color:orange;">Unknown screen: ${game.screen}</div>`;
+            }
+            console.log('Content set, length:', content.innerHTML.length);
+        } catch (e) {
+            console.error('render() error:', e);
+            document.getElementById('game-content').innerHTML = `<div style="padding:20px;color:red;">Render Error: ${e.message}<br><pre>${e.stack}</pre></div>`;
         }
     }
 
