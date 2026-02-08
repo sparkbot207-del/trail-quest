@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trail Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --green: #10b981;
+            --green-light: #34d399;
+            --blue: #06b6d4;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --purple: #8b5cf6;
+            --dark: #0f172a;
+            --dark-lighter: #1e293b;
+            --dark-card: #1e293b;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --border: #334155;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        h1, h2, h3, .font-display {
+            font-family: 'Russo One', sans-serif;
+        }
+        
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* ============================================
+           LAYOUT
+           ============================================ */
+        #app {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            background: var(--dark);
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        /* Screen header */
+        .screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--dark-lighter);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--text);
+            font-size: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .back-btn:active {
+            background: var(--border);
+        }
+        
+        .screen-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.2rem;
+            color: var(--green);
+        }
+        
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: rgba(245, 158, 11, 0.15);
+            border-radius: 20px;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        
+        /* Screen content */
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        /* Screen footer */
+        .screen-footer {
+            padding: 16px 20px;
+            background: var(--dark-lighter);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.1s, opacity 0.1s;
+        }
+        
+        .btn:active {
+            transform: scale(0.97);
+        }
+        
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .btn:disabled:active {
+            transform: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green), var(--green-light));
+            color: var(--dark);
+        }
+        
+        .btn-secondary {
+            background: var(--dark-card);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-secondary:active {
+            border-color: var(--green);
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        /* ============================================
+           TITLE SCREEN
+           ============================================ */
+        #screen-title {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(180deg, #0f2922 0%, var(--dark) 100%);
+        }
+        
+        .title-logo {
+            margin-bottom: 20px;
+        }
+        
+        .game-title {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .game-subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+        }
+        
+        .title-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .title-stats {
+            margin-top: 50px;
+            display: flex;
+            gap: 40px;
+        }
+        
+        .title-stat {
+            text-align: center;
+        }
+        
+        .title-stat-value {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.5rem;
+            color: var(--green);
+        }
+        
+        .title-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        
+        /* ============================================
+           BIKE SELECT SCREEN
+           ============================================ */
+        .bike-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        
+        .bike-card {
+            background: var(--dark-card);
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .bike-card:active {
+            transform: scale(0.97);
+        }
+        
+        .bike-card.selected {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .bike-card.locked {
+            opacity: 0.6;
+        }
+        
+        .bike-card-image {
+            height: 60px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bike-card-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .bike-card-type {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+        
+        .bike-card-stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+        
+        .bike-card-price {
+            margin-top: 10px;
+            font-weight: 700;
+            color: var(--orange);
+        }
+        
+        .bike-card.selected .bike-card-price,
+        .bike-card:not(.locked) .bike-card-price {
+            color: var(--green);
+        }
+        
+        /* ============================================
+           TRAIL SELECT SCREEN
+           ============================================ */
+        .trail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .trail-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            background: var(--dark-card);
+            border-radius: 14px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .trail-card:active {
+            transform: scale(0.98);
+        }
+        
+        .trail-card.selected {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .trail-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .trail-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .trail-name {
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .trail-meta {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+        
+        .trail-length {
+            text-align: right;
+        }
+        
+        .trail-miles {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.4rem;
+            color: var(--green);
+        }
+        
+        .trail-unit {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+        
+        /* ============================================
+           GARAGE SCREEN
+           ============================================ */
+        .garage-bike {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, transparent 100%);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+        
+        .garage-bike-image {
+            height: 100px;
+            margin-bottom: 16px;
+        }
+        
+        .garage-bike-name {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+        }
+        
+        .garage-bike-type {
+            color: var(--text-dim);
+            margin-bottom: 16px;
+        }
+        
+        .garage-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .garage-stat {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 8px;
+            border-radius: 10px;
+        }
+        
+        .garage-stat-value {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.3rem;
+            color: var(--green);
+        }
+        
+        .garage-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        
+        .upgrade-section {
+            margin-bottom: 24px;
+        }
+        
+        .upgrade-section-title {
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .upgrade-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .upgrade-card {
+            background: var(--dark-card);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .upgrade-card:active {
+            transform: scale(0.97);
+        }
+        
+        .upgrade-card.owned {
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .upgrade-card.locked {
+            opacity: 0.4;
+        }
+        
+        .upgrade-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        
+        .upgrade-effect {
+            font-size: 0.7rem;
+            color: var(--green);
+            margin-bottom: 6px;
+        }
+        
+        .upgrade-price {
+            font-size: 0.8rem;
+            color: var(--orange);
+            font-weight: 700;
+        }
+        
+        .upgrade-card.owned .upgrade-price {
+            color: var(--green);
+        }
+        
+        /* ============================================
+           RIDE SCREEN
+           ============================================ */
+        #screen-ride {
+            background: linear-gradient(180deg, 
+                #7dd3fc 0%,      /* Sky blue */
+                #bae6fd 20%,     /* Light sky */
+                #4ade80 50%,     /* Green hills */
+                #22c55e 70%,     /* Darker green */
+                #16a34a 100%     /* Ground */
+            );
+        }
+        
+        /* HUD */
+        .ride-hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+            z-index: 100;
+        }
+        
+        .hud-item {
+            text-align: center;
+        }
+        
+        .hud-value {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.2rem;
+        }
+        
+        .hud-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+        
+        .hud-battery {
+            color: var(--green);
+        }
+        
+        .hud-battery.warning {
+            color: var(--orange);
+        }
+        
+        .hud-battery.danger {
+            color: var(--red);
+            animation: blink 0.5s infinite;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+        
+        /* Progress bar */
+        .ride-progress {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            height: 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 4px;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .ride-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--blue));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease-out;
+        }
+        
+        /* Mode display */
+        .ride-mode {
+            position: absolute;
+            top: 92px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 16px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 20px;
+            font-family: 'Russo One', sans-serif;
+            font-size: 0.85rem;
+            z-index: 100;
+        }
+        
+        /* Game world */
+        .ride-world {
+            position: absolute;
+            inset: 0;
+            bottom: 110px;
+            overflow: hidden;
+        }
+        
+        /* Clouds */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+        }
+        
+        /* Mountains */
+        .mountain {
+            position: absolute;
+            bottom: 50%;
+            width: 0;
+            height: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 120px solid #64748b;
+            opacity: 0.4;
+        }
+        
+        /* Ground */
+        .ride-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        /* Trail */
+        .ride-trail {
+            position: absolute;
+            bottom: 15%;
+            left: 0;
+            right: 0;
+            height: 45px;
+            background: linear-gradient(180deg, #a8a29e 0%, #78716c 100%);
+        }
+        
+        .ride-trail::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(90deg, 
+                #fef3c7 0px, #fef3c7 30px,
+                transparent 30px, transparent 60px
+            );
+            animation: trail-scroll 0.8s linear infinite;
+        }
+        
+        @keyframes trail-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-60px); }
+        }
+        
+        /* Trees */
+        .tree {
+            position: absolute;
+            bottom: 40%;
+        }
+        
+        /* Bike */
+        .ride-bike {
+            position: absolute;
+            bottom: calc(15% + 40px);
+            left: 15%;
+            z-index: 50;
+        }
+        
+        .ride-bike.jumping {
+            animation: jump 0.35s ease-out;
+        }
+        
+        @keyframes jump {
+            50% { transform: translateY(-25px); }
+        }
+        
+        .wheel-spin {
+            animation: spin 0.4s linear infinite;
+            transform-origin: center;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Speed display */
+        .ride-speed {
+            position: absolute;
+            bottom: 130px;
+            right: 20px;
+            text-align: right;
+            z-index: 100;
+        }
+        
+        .speed-value {
+            font-family: 'Russo One', sans-serif;
+            font-size: 3rem;
+            line-height: 1;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .speed-unit {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Controls */
+        .ride-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 110px;
+            background: var(--dark-lighter);
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 16px;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            opacity: 0.5;
+            transition: all 0.15s;
+            border: 2px solid transparent;
+        }
+        
+        .mode-btn.active {
+            opacity: 1;
+            transform: scale(1.05);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .mode-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .mode-btn-icon {
+            font-size: 1.4rem;
+        }
+        
+        .mode-eco {
+            background: linear-gradient(180deg, #22c55e, #16a34a);
+            color: white;
+        }
+        
+        .mode-normal {
+            background: linear-gradient(180deg, #06b6d4, #0891b2);
+            color: white;
+        }
+        
+        .mode-sport {
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .mode-turbo {
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        /* Event overlay */
+        .event-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 30px;
+        }
+        
+        .event-overlay.show {
+            display: flex;
+        }
+        
+        .event-popup {
+            background: var(--dark-card);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            max-width: 320px;
+            width: 100%;
+            border: 2px solid var(--green);
+            animation: pop-in 0.25s ease-out;
+        }
+        
+        @keyframes pop-in {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+        
+        .event-icon {
+            font-size: 4rem;
+            margin-bottom: 12px;
+        }
+        
+        .event-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        
+        .event-text {
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .event-effect {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .event-effect.positive {
+            color: var(--green);
+        }
+        
+        .event-effect.negative {
+            color: var(--orange);
+        }
+        
+        .event-effect.neutral {
+            color: var(--text-dim);
+        }
+        
+        /* ============================================
+           RESULTS SCREEN
+           ============================================ */
+        #screen-results {
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            background: linear-gradient(180deg, #0f2922 0%, var(--dark) 100%);
+        }
+        
+        .results-icon {
+            font-size: 5rem;
+            margin-bottom: 16px;
+        }
+        
+        .results-title {
+            font-family: 'Russo One', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .results-title.success {
+            color: var(--green);
+        }
+        
+        .results-title.failure {
+            color: var(--orange);
+        }
+        
+        .results-trail {
+            color: var(--text-dim);
+            margin-bottom: 30px;
+        }
+        
+        .results-card {
+            background: var(--dark-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 320px;
+        }
+        
+        .results-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .results-row:last-child {
+            border: none;
+        }
+        
+        .results-label {
+            color: var(--text-dim);
+        }
+        
+        .results-value {
+            font-weight: 700;
+            color: var(--green);
+        }
+        
+        .results-reward {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--orange);
+            border-radius: 12px;
+            padding: 14px 24px;
+            margin-bottom: 30px;
+        }
+        
+        .results-reward-text {
+            font-family: 'Russo One', sans-serif;
+            font-size: 1.3rem;
+            color: var(--orange);
+        }
+        
+        .results-buttons {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 320px;
+        }
+        
+        .results-buttons .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- ========== TITLE SCREEN ========== -->
+        <div id="screen-title" class="screen active">
+            <div class="title-logo">
+                <svg width="140" height="90" viewBox="0 0 140 90">
+                    <g transform="translate(10, 5)">
+                        <!-- Rear wheel -->
+                        <circle cx="25" cy="60" r="20" fill="none" stroke="#334155" stroke-width="5"/>
+                        <circle cx="25" cy="60" r="8" fill="#334155"/>
+                        <!-- Front wheel -->
+                        <circle cx="95" cy="60" r="20" fill="none" stroke="#334155" stroke-width="5"/>
+                        <circle cx="95" cy="60" r="8" fill="#334155"/>
+                        <!-- Frame -->
+                        <path d="M25 60 L45 30 L80 30 L95 60" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M45 30 L45 60 L25 60" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M80 30 L65 60" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
+                        <!-- Battery -->
+                        <rect x="48" y="34" width="28" height="12" rx="2" fill="#1e293b"/>
+                        <rect x="50" y="36" width="8" height="8" rx="1" fill="#10b981"/>
+                        <!-- Seat -->
+                        <ellipse cx="42" cy="25" rx="12" ry="4" fill="#1e293b"/>
+                        <!-- Handlebars -->
+                        <path d="M80 30 L88 22 L98 20" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Motor indicator -->
+                        <circle cx="25" cy="60" r="6" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+                    </g>
+                </svg>
+            </div>
+            <h1 class="game-title">TRAIL QUEST</h1>
+            <p class="game-subtitle">New England E-Bike Adventure</p>
+            
+            <div class="title-buttons">
+                <button class="btn btn-primary btn-block" onclick="Game.showScreen('bikes')">
+                    ⚡ Start Ride
+                </button>
+                <button class="btn btn-secondary btn-block" onclick="Game.showScreen('garage')">
+                    🔧 Garage
+                </button>
+            </div>
+            
+            <div class="title-stats">
+                <div class="title-stat">
+                    <div class="title-stat-value" id="stat-miles">0</div>
+                    <div class="title-stat-label">Miles</div>
+                </div>
+                <div class="title-stat">
+                    <div class="title-stat-value" id="stat-rides">0</div>
+                    <div class="title-stat-label">Rides</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== BIKE SELECT SCREEN ========== -->
+        <div id="screen-bikes" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="Game.showScreen('title')">←</button>
+                <span class="screen-title">SELECT BIKE</span>
+                <div class="header-info">
+                    <span>$</span><span id="bikes-money">0</span>
+                </div>
+            </div>
+            <div class="screen-content">
+                <div class="bike-grid" id="bike-grid">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            <div class="screen-footer">
+                <button class="btn btn-primary btn-block" id="btn-bikes-next" onclick="Game.showScreen('trails')" disabled>
+                    Select a Bike
+                </button>
+            </div>
+        </div>
+        
+        <!-- ========== TRAIL SELECT SCREEN ========== -->
+        <div id="screen-trails" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="Game.showScreen('bikes')">←</button>
+                <span class="screen-title">SELECT TRAIL</span>
+                <div style="width: 40px;"></div>
+            </div>
+            <div class="screen-content">
+                <div class="trail-list" id="trail-list">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+            <div class="screen-footer">
+                <button class="btn btn-primary btn-block" id="btn-trails-next" onclick="Game.startRide()" disabled>
+                    Select a Trail
+                </button>
+            </div>
+        </div>
+        
+        <!-- ========== GARAGE SCREEN ========== -->
+        <div id="screen-garage" class="screen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="Game.showScreen('title')">←</button>
+                <span class="screen-title">GARAGE</span>
+                <div class="header-info">
+                    <span>$</span><span id="garage-money">0</span>
+                </div>
+            </div>
+            <div class="screen-content" id="garage-content">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+        
+        <!-- ========== RIDE SCREEN ========== -->
+        <div id="screen-ride" class="screen">
+            <!-- HUD -->
+            <div class="ride-hud">
+                <div class="hud-item">
+                    <div class="hud-value hud-battery" id="hud-battery">100%</div>
+                    <div class="hud-label">Battery</div>
+                </div>
+                <div class="hud-item">
+                    <div class="hud-value" id="hud-distance">0.0 mi</div>
+                    <div class="hud-label">Distance</div>
+                </div>
+                <div class="hud-item">
+                    <div class="hud-value" id="hud-time">0:00</div>
+                    <div class="hud-label">Time</div>
+                </div>
+            </div>
+            
+            <!-- Progress -->
+            <div class="ride-progress">
+                <div class="ride-progress-fill" id="ride-progress"></div>
+            </div>
+            
+            <!-- Mode indicator -->
+            <div class="ride-mode" id="ride-mode">🌱 ECO</div>
+            
+            <!-- Game world -->
+            <div class="ride-world" id="ride-world">
+                <div class="ride-ground"></div>
+                <div class="ride-trail"></div>
+                <div class="ride-bike" id="ride-bike">
+                    <svg width="100" height="65" viewBox="0 0 100 65">
+                        <g>
+                            <!-- Rear wheel -->
+                            <g class="wheel-spin" style="transform-origin: 18px 45px;">
+                                <circle cx="18" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                                <circle cx="18" cy="45" r="5" fill="#334155"/>
+                                <line x1="18" y1="31" x2="18" y2="36" stroke="#64748b" stroke-width="2"/>
+                                <line x1="18" y1="54" x2="18" y2="59" stroke="#64748b" stroke-width="2"/>
+                                <line x1="4" y1="45" x2="9" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <line x1="27" y1="45" x2="32" y2="45" stroke="#64748b" stroke-width="2"/>
+                            </g>
+                            <!-- Front wheel -->
+                            <g class="wheel-spin" style="transform-origin: 72px 45px;">
+                                <circle cx="72" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                                <circle cx="72" cy="45" r="5" fill="#334155"/>
+                                <line x1="72" y1="31" x2="72" y2="36" stroke="#64748b" stroke-width="2"/>
+                                <line x1="72" y1="54" x2="72" y2="59" stroke="#64748b" stroke-width="2"/>
+                                <line x1="58" y1="45" x2="63" y2="45" stroke="#64748b" stroke-width="2"/>
+                                <line x1="81" y1="45" x2="86" y2="45" stroke="#64748b" stroke-width="2"/>
+                            </g>
+                            <!-- Frame -->
+                            <path d="M18 45 L32 22 L60 22 L72 45" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M32 22 L32 45 L18 45" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M60 22 L50 45" fill="none" stroke="#10b981" stroke-width="4"/>
+                            <!-- Battery -->
+                            <rect x="35" y="25" width="22" height="10" rx="2" fill="#1e293b"/>
+                            <rect x="37" y="27" width="6" height="6" rx="1" fill="#10b981" id="bike-battery-fill"/>
+                            <!-- Seat -->
+                            <ellipse cx="30" cy="18" rx="10" ry="3" fill="#1e293b"/>
+                            <!-- Handlebars -->
+                            <path d="M60 22 L68 15 L78 13" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Motor -->
+                            <circle cx="18" cy="45" r="5" fill="#1e293b" stroke="#10b981" stroke-width="1"/>
+                            <!-- Headlight -->
+                            <circle cx="80" cy="16" r="3" fill="#fef08a"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- Speed -->
+            <div class="ride-speed">
+                <div class="speed-value" id="ride-speed">0</div>
+                <div class="speed-unit">MPH</div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="ride-controls">
+                <button class="mode-btn mode-eco active" data-mode="eco" onclick="Game.setMode('eco')">
+                    <span class="mode-btn-icon">🌱</span>
+                    <span>ECO</span>
+                </button>
+                <button class="mode-btn mode-normal" data-mode="normal" onclick="Game.setMode('normal')">
+                    <span class="mode-btn-icon">🚴</span>
+                    <span>NORMAL</span>
+                </button>
+                <button class="mode-btn mode-sport" data-mode="sport" onclick="Game.setMode('sport')">
+                    <span class="mode-btn-icon">⚡</span>
+                    <span>SPORT</span>
+                </button>
+                <button class="mode-btn mode-turbo" data-mode="turbo" onclick="Game.setMode('turbo')">
+                    <span class="mode-btn-icon">🚀</span>
+                    <span>TURBO</span>
+                </button>
+            </div>
+            
+            <!-- Event popup -->
+            <div class="event-overlay" id="event-overlay">
+                <div class="event-popup">
+                    <div class="event-icon" id="event-icon">🦌</div>
+                    <div class="event-title" id="event-title">Wildlife!</div>
+                    <div class="event-text" id="event-text">A deer crosses the trail ahead.</div>
+                    <div class="event-effect positive" id="event-effect">+5% Battery</div>
+                    <button class="btn btn-primary" onclick="Game.closeEvent()">Continue</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== RESULTS SCREEN ========== -->
+        <div id="screen-results" class="screen">
+            <div class="results-icon" id="results-icon">🏆</div>
+            <h2 class="results-title success" id="results-title">Trail Complete!</h2>
+            <p class="results-trail" id="results-trail">East Bay Bike Path</p>
+            
+            <div class="results-card">
+                <div class="results-row">
+                    <span class="results-label">Distance</span>
+                    <span class="results-value" id="results-distance">0 mi</span>
+                </div>
+                <div class="results-row">
+                    <span class="results-label">Time</span>
+                    <span class="results-value" id="results-time">0:00</span>
+                </div>
+                <div class="results-row">
+                    <span class="results-label">Top Speed</span>
+                    <span class="results-value" id="results-speed">0 mph</span>
+                </div>
+                <div class="results-row">
+                    <span class="results-label">Battery Left</span>
+                    <span class="results-value" id="results-battery">0%</span>
+                </div>
+            </div>
+            
+            <div class="results-reward" id="results-reward">
+                <span class="results-reward-text">+$0 Earned!</span>
+            </div>
+            
+            <div class="results-buttons">
+                <button class="btn btn-secondary" onclick="Game.showScreen('title')">Menu</button>
+                <button class="btn btn-primary" onclick="Game.showScreen('trails')">Ride Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ================================================================
+    // TRAIL QUEST - Game Engine
+    // Clean, tested, polished
+    // ================================================================
+    
+    const Game = (function() {
+        'use strict';
+        
+        // ========== GAME DATA ==========
+        const BIKES = [
+            { id: 'revv1', name: 'Revv1 DRT', type: 'Dual Sport', speed: 40, range: 50, accel: 7, price: 0, color: '#10b981' },
+            { id: 'super73', name: 'Super 73 RX', type: 'Cafe Racer', speed: 35, range: 65, accel: 6, price: 600, color: '#3b82f6' },
+            { id: 'surron', name: 'Sur-Ron Ultra', type: 'MX Style', speed: 55, range: 45, accel: 9, price: 1800, color: '#f59e0b' },
+            { id: 'onyx', name: 'ONYX RCR', type: 'Speed Demon', speed: 70, range: 40, accel: 10, price: 3000, color: '#8b5cf6' }
+        ];
+        
+        const TRAILS = [
+            { name: 'East Bay Bike Path', state: 'Rhode Island', length: 14, icon: '🌊', surface: 'Paved' },
+            { name: 'Minuteman Bikeway', state: 'Massachusetts', length: 11, icon: '🏛️', surface: 'Paved' },
+            { name: 'Cape Cod Rail Trail', state: 'Massachusetts', length: 26, icon: '🌲', surface: 'Paved' },
+            { name: 'Burlington Greenway', state: 'Vermont', length: 13, icon: '⛵', surface: 'Paved' },
+            { name: 'Eastern Trail', state: 'Maine', length: 29, icon: '🦞', surface: 'Mixed' },
+            { name: 'Airline State Park', state: 'Connecticut', length: 50, icon: '✈️', surface: 'Crushed Stone' }
+        ];
+        
+        const UPGRADES = {
+            battery: [
+                { id: 'bat1', name: '52V 20Ah', effect: '+10 Range', stat: 'range', bonus: 10, price: 400 },
+                { id: 'bat2', name: '72V 30Ah', effect: '+25 Range', stat: 'range', bonus: 25, price: 900 },
+                { id: 'bat3', name: '72V 40Ah', effect: '+45 Range', stat: 'range', bonus: 45, price: 1600 }
+            ],
+            motor: [
+                { id: 'mot1', name: 'Hub 1500W', effect: '+5 Speed', stat: 'speed', bonus: 5, price: 500 },
+                { id: 'mot2', name: 'QS205 3kW', effect: '+12 Speed', stat: 'speed', bonus: 12, price: 1100 },
+                { id: 'mot3', name: 'QS205 5kW', effect: '+20 Speed', stat: 'speed', bonus: 20, price: 1800 }
+            ],
+            controller: [
+                { id: 'ctrl1', name: 'Basic 50A', effect: '+1 Accel', stat: 'accel', bonus: 1, price: 250 },
+                { id: 'ctrl2', name: 'Fardriver ND72', effect: '+2 Accel', stat: 'accel', bonus: 2, price: 550 },
+                { id: 'ctrl3', name: 'Fardriver ND84', effect: '+4 Accel', stat: 'accel', bonus: 4, price: 950 }
+            ]
+        };
+        
+        const EVENTS = [
+            { icon: '🦌', title: 'Wildlife', text: 'A deer watches from the treeline.', battery: 0 },
+            { icon: '🚧', title: 'Detour', text: 'Trail construction - rough path ahead!', battery: -8 },
+            { icon: '💨', title: 'Headwind', text: 'Strong gusts slow you down.', battery: -5 },
+            { icon: '☀️', title: 'Perfect Day', text: 'Ideal riding conditions boost efficiency!', battery: 5 },
+            { icon: '🧑‍🤝‍🧑', title: 'Fellow Rider', text: 'They share their portable charger!', battery: 12 },
+            { icon: '🌧️', title: 'Rain Shower', text: 'Quick downpour reduces traction.', battery: -6 },
+            { icon: '⬇️', title: 'Downhill', text: 'Regenerative braking kicks in!', battery: 10 },
+            { icon: '⛰️', title: 'Hill Climb', text: 'Steep grade drains extra power.', battery: -10 },
+            { icon: '☕', title: 'Trail Cafe', text: 'Quick stop for coffee and a top-off!', battery: 15 },
+            { icon: '🌈', title: 'Rainbow', text: 'Beautiful view after the storm!', battery: 3 },
+            { icon: '🛞', title: 'Rough Patch', text: 'Bumpy section slows you down.', battery: -4 },
+            { icon: '🎉', title: 'Trail Event', text: 'Local bike meetup - good vibes!', battery: 5 }
+        ];
+        
+        // ========== PLAYER STATE (Persistent) ==========
+        let player = {
+            money: 500,
+            ownedBikes: ['revv1'],
+            ownedUpgrades: [],
+            currentBike: 'revv1',
+            totalMiles: 0,
+            totalRides: 0
+        };
+        
+        // ========== RIDE STATE (Per-ride) ==========
+        let ride = {
+            bike: null,
+            trail: null,
+            battery: 100,
+            distance: 0,
+            time: 0,
+            speed: 0,
+            topSpeed: 0,
+            mode: 'eco',
+            running: false,
+            paused: false
+        };
+        
+        // ========== SELECTION STATE ==========
+        let selection = {
+            bike: null,
+            trail: null
+        };
+        
+        // Loop reference
+        let gameLoop = null;
+        let treeSpawner = null;
+        
+        // ========== INITIALIZATION ==========
+        function init() {
+            loadPlayer();
+            renderBikes();
+            renderTrails();
+            renderGarage();
+            updateTitleStats();
+            spawnInitialScenery();
+            console.log('Trail Quest initialized');
+        }
+        
+        function loadPlayer() {
+            try {
+                const saved = localStorage.getItem('trailquest_save');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    player = { ...player, ...data };
+                }
+            } catch (e) {
+                console.warn('Failed to load save:', e);
+            }
+        }
+        
+        function savePlayer() {
+            try {
+                localStorage.setItem('trailquest_save', JSON.stringify(player));
+            } catch (e) {
+                console.warn('Failed to save:', e);
+            }
+        }
+        
+        // ========== SCREEN NAVIGATION ==========
+        function showScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            // Show target screen
+            const screen = document.getElementById('screen-' + screenId);
+            if (screen) {
+                screen.classList.add('active');
+            }
+            
+            // Screen-specific updates
+            if (screenId === 'title') {
+                updateTitleStats();
+            } else if (screenId === 'bikes') {
+                renderBikes();
+                document.getElementById('bikes-money').textContent = player.money;
+            } else if (screenId === 'garage') {
+                renderGarage();
+                document.getElementById('garage-money').textContent = player.money;
+            } else if (screenId === 'trails') {
+                renderTrails();
+            }
+        }
+        
+        // ========== TITLE SCREEN ==========
+        function updateTitleStats() {
+            document.getElementById('stat-miles').textContent = player.totalMiles;
+            document.getElementById('stat-rides').textContent = player.totalRides;
+        }
+        
+        // ========== BIKE SELECT ==========
+        function renderBikes() {
+            const grid = document.getElementById('bike-grid');
+            const bonuses = calculateBonuses();
+            
+            grid.innerHTML = BIKES.map(bike => {
+                const owned = player.ownedBikes.includes(bike.id);
+                const selected = selection.bike === bike.id;
+                const stats = owned ? {
+                    speed: bike.speed + bonuses.speed,
+                    range: bike.range + bonuses.range
+                } : bike;
+                
+                return `
+                    <div class="bike-card ${selected ? 'selected' : ''} ${!owned ? 'locked' : ''}" 
+                         onclick="Game.selectBike('${bike.id}')">
+                        <div class="bike-card-image">
+                            ${renderBikeSVG(bike.color, 70)}
+                        </div>
+                        <div class="bike-card-name">${bike.name}</div>
+                        <div class="bike-card-type">${bike.type}</div>
+                        <div class="bike-card-stats">
+                            <span>${stats.speed} mph</span>
+                            <span>${stats.range} mi</span>
+                        </div>
+                        ${owned 
+                            ? `<div class="bike-card-price">${selected ? '✓ Selected' : 'Owned'}</div>`
+                            : `<div class="bike-card-price">$${bike.price}</div>`
+                        }
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function selectBike(bikeId) {
+            const bike = BIKES.find(b => b.id === bikeId);
+            if (!bike) return;
+            
+            const owned = player.ownedBikes.includes(bikeId);
+            
+            if (!owned) {
+                // Try to buy
+                if (player.money >= bike.price) {
+                    if (confirm(`Buy ${bike.name} for $${bike.price}?`)) {
+                        player.money -= bike.price;
+                        player.ownedBikes.push(bikeId);
+                        savePlayer();
+                        document.getElementById('bikes-money').textContent = player.money;
+                    }
+                } else {
+                    alert(`Not enough money! You need $${bike.price}`);
+                }
+                renderBikes();
+                return;
+            }
+            
+            // Select the bike
+            selection.bike = bikeId;
+            player.currentBike = bikeId;
+            savePlayer();
+            renderBikes();
+            
+            // Enable continue button
+            const btn = document.getElementById('btn-bikes-next');
+            btn.disabled = false;
+            btn.textContent = 'Next →';
+        }
+        
+        // ========== TRAIL SELECT ==========
+        function renderTrails() {
+            const list = document.getElementById('trail-list');
+            
+            list.innerHTML = TRAILS.map((trail, idx) => {
+                const selected = selection.trail === idx;
+                return `
+                    <div class="trail-card ${selected ? 'selected' : ''}" 
+                         onclick="Game.selectTrail(${idx})">
+                        <div class="trail-icon">${trail.icon}</div>
+                        <div class="trail-info">
+                            <div class="trail-name">${trail.name}</div>
+                            <div class="trail-meta">${trail.state} • ${trail.surface}</div>
+                        </div>
+                        <div class="trail-length">
+                            <div class="trail-miles">${trail.length}</div>
+                            <div class="trail-unit">miles</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function selectTrail(idx) {
+            selection.trail = idx;
+            renderTrails();
+            
+            const btn = document.getElementById('btn-trails-next');
+            btn.disabled = false;
+            btn.textContent = "Let's Ride! →";
+        }
+        
+        // ========== GARAGE ==========
+        function renderGarage() {
+            const content = document.getElementById('garage-content');
+            const bike = BIKES.find(b => b.id === player.currentBike) || BIKES[0];
+            const bonuses = calculateBonuses();
+            
+            let html = `
+                <div class="garage-bike">
+                    <div class="garage-bike-image">
+                        ${renderBikeSVG(bike.color, 140)}
+                    </div>
+                    <div class="garage-bike-name">${bike.name}</div>
+                    <div class="garage-bike-type">${bike.type}</div>
+                    <div class="garage-stats">
+                        <div class="garage-stat">
+                            <div class="garage-stat-value">${bike.speed + bonuses.speed}</div>
+                            <div class="garage-stat-label">Speed</div>
+                        </div>
+                        <div class="garage-stat">
+                            <div class="garage-stat-value">${bike.range + bonuses.range}</div>
+                            <div class="garage-stat-label">Range</div>
+                        </div>
+                        <div class="garage-stat">
+                            <div class="garage-stat-value">${bike.accel + bonuses.accel}</div>
+                            <div class="garage-stat-label">Accel</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Upgrade sections
+            const sections = [
+                { key: 'battery', icon: '🔋', title: 'Battery Upgrades' },
+                { key: 'motor', icon: '⚙️', title: 'Motor Upgrades' },
+                { key: 'controller', icon: '🎛️', title: 'Controller Upgrades' }
+            ];
+            
+            sections.forEach(section => {
+                html += `
+                    <div class="upgrade-section">
+                        <div class="upgrade-section-title">${section.icon} ${section.title}</div>
+                        <div class="upgrade-grid">
+                            ${UPGRADES[section.key].map(upgrade => {
+                                const owned = player.ownedUpgrades.includes(upgrade.id);
+                                const canAfford = player.money >= upgrade.price;
+                                return `
+                                    <div class="upgrade-card ${owned ? 'owned' : ''} ${!owned && !canAfford ? 'locked' : ''}"
+                                         onclick="${owned ? '' : `Game.buyUpgrade('${upgrade.id}')`}">
+                                        <div class="upgrade-name">${upgrade.name}</div>
+                                        <div class="upgrade-effect">${upgrade.effect}</div>
+                                        <div class="upgrade-price">${owned ? '✓ Owned' : '$' + upgrade.price}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
+        
+        function buyUpgrade(upgradeId) {
+            // Find the upgrade
+            let upgrade = null;
+            for (const category of Object.values(UPGRADES)) {
+                upgrade = category.find(u => u.id === upgradeId);
+                if (upgrade) break;
+            }
+            
+            if (!upgrade) return;
+            if (player.ownedUpgrades.includes(upgradeId)) return;
+            if (player.money < upgrade.price) {
+                alert(`Not enough money! You need $${upgrade.price}`);
+                return;
+            }
+            
+            player.money -= upgrade.price;
+            player.ownedUpgrades.push(upgradeId);
+            savePlayer();
+            renderGarage();
+            document.getElementById('garage-money').textContent = player.money;
+        }
+        
+        function calculateBonuses() {
+            const bonuses = { speed: 0, range: 0, accel: 0 };
+            
+            for (const category of Object.values(UPGRADES)) {
+                for (const upgrade of category) {
+                    if (player.ownedUpgrades.includes(upgrade.id)) {
+                        bonuses[upgrade.stat] += upgrade.bonus;
+                    }
+                }
+            }
+            
+            return bonuses;
+        }
+        
+        // ========== RIDE ==========
+        function startRide() {
+            // Get selected bike with bonuses
+            const baseBike = BIKES.find(b => b.id === (selection.bike || player.currentBike)) || BIKES[0];
+            const bonuses = calculateBonuses();
+            
+            ride.bike = {
+                ...baseBike,
+                speed: Math.max(10, baseBike.speed + bonuses.speed),
+                range: Math.max(10, baseBike.range + bonuses.range),
+                accel: Math.max(1, baseBike.accel + bonuses.accel)
+            };
+            
+            console.log('Ride bike stats:', ride.bike);
+            
+            // Get selected trail
+            ride.trail = TRAILS[selection.trail] || TRAILS[0];
+            
+            // Reset ride state
+            ride.battery = 100;
+            ride.distance = 0;
+            ride.time = 0;
+            ride.speed = 0;
+            ride.topSpeed = 0;
+            ride.mode = 'eco';
+            ride.running = true;
+            ride.paused = false;
+            
+            // Show ride screen
+            showScreen('ride');
+            
+            // Set initial mode
+            setMode('eco');
+            
+            // Update HUD
+            updateRideHUD();
+            
+            // Start game loop
+            startGameLoop();
+            startTreeSpawner();
+            
+            console.log('Ride started:', ride.bike.name, 'on', ride.trail.name);
+        }
+        
+        function startGameLoop() {
+            if (gameLoop) clearInterval(gameLoop);
+            
+            gameLoop = setInterval(() => {
+                if (!ride.running || ride.paused) return;
+                
+                // Calculate target speed based on mode
+                const speedMultipliers = { eco: 0.4, normal: 0.6, sport: 0.8, turbo: 1.0 };
+                const targetSpeed = ride.bike.speed * speedMultipliers[ride.mode];
+                
+                // Smoothly approach target speed
+                const accelRate = 0.3 + (ride.bike.accel * 0.08);
+                if (ride.speed < targetSpeed) {
+                    ride.speed = Math.min(targetSpeed, ride.speed + accelRate);
+                } else if (ride.speed > targetSpeed) {
+                    ride.speed = Math.max(targetSpeed, ride.speed - accelRate * 0.5);
+                }
+                
+                // Track top speed
+                if (ride.speed > ride.topSpeed) {
+                    ride.topSpeed = ride.speed;
+                }
+                
+                // Update distance (speed is mph, tick is 100ms)
+                // mph / 3600 = miles per second, / 10 = miles per 100ms
+                const milesThisTick = ride.speed / 36000;
+                ride.distance += milesThisTick;
+                
+                // Battery drain based on distance traveled (not time)
+                // This way, your range stat actually means something!
+                // drain per mile = 100% / bike range
+                // mode multipliers make aggressive modes less efficient
+                const drainPerMile = 100 / ride.bike.range;
+                const modeMultiplier = { eco: 0.8, normal: 1.0, sport: 1.25, turbo: 1.6 };
+                ride.battery -= milesThisTick * drainPerMile * modeMultiplier[ride.mode];
+                
+                // Clamp battery
+                ride.battery = Math.max(0, Math.min(100, ride.battery));
+                
+                // Update time
+                ride.time += 0.1;
+                
+                // Random events (0.15% chance per tick = roughly every 60-70 seconds)
+                if (Math.random() < 0.0015) {
+                    triggerEvent();
+                }
+                
+                // Update HUD
+                updateRideHUD();
+                
+                // Update wheel spin speed
+                updateWheelSpeed();
+                
+                // Check end conditions
+                if (ride.distance >= ride.trail.length) {
+                    endRide(true);
+                } else if (ride.battery <= 0) {
+                    endRide(false);
+                }
+                
+            }, 100);
+        }
+        
+        function startTreeSpawner() {
+            if (treeSpawner) clearInterval(treeSpawner);
+            
+            const world = document.getElementById('ride-world');
+            
+            treeSpawner = setInterval(() => {
+                if (!ride.running || ride.paused) return;
+                
+                const tree = document.createElement('div');
+                tree.className = 'tree';
+                tree.innerHTML = getRandomTreeSVG();
+                tree.style.right = '-60px';
+                tree.style.bottom = (35 + Math.random() * 15) + '%';
+                
+                // Speed based on ride speed
+                const duration = Math.max(1, 4 - (ride.speed / 30));
+                tree.style.transition = `right ${duration}s linear`;
+                
+                world.appendChild(tree);
+                
+                // Animate
+                requestAnimationFrame(() => {
+                    tree.style.right = '110%';
+                });
+                
+                // Remove after animation
+                setTimeout(() => tree.remove(), duration * 1000 + 500);
+                
+            }, 600);
+        }
+        
+        function updateRideHUD() {
+            // Battery
+            const batteryEl = document.getElementById('hud-battery');
+            const batteryPct = Math.round(ride.battery);
+            batteryEl.textContent = batteryPct + '%';
+            batteryEl.className = 'hud-value hud-battery' + 
+                (batteryPct < 15 ? ' danger' : batteryPct < 30 ? ' warning' : '');
+            
+            // Distance
+            document.getElementById('hud-distance').textContent = ride.distance.toFixed(1) + ' mi';
+            
+            // Time
+            const mins = Math.floor(ride.time / 60);
+            const secs = Math.floor(ride.time % 60);
+            document.getElementById('hud-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            // Speed
+            document.getElementById('ride-speed').textContent = Math.round(ride.speed);
+            
+            // Progress
+            const progress = Math.min(100, (ride.distance / ride.trail.length) * 100);
+            document.getElementById('ride-progress').style.width = progress + '%';
+        }
+        
+        function updateWheelSpeed() {
+            const duration = Math.max(0.1, 0.8 - (ride.speed / 100));
+            document.querySelectorAll('.wheel-spin').forEach(wheel => {
+                wheel.style.animationDuration = duration + 's';
+            });
+        }
+        
+        function setMode(mode) {
+            ride.mode = mode;
+            
+            // Update button states
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            
+            // Update mode display
+            const modeInfo = {
+                eco: { icon: '🌱', name: 'ECO', color: '#22c55e' },
+                normal: { icon: '🚴', name: 'NORMAL', color: '#06b6d4' },
+                sport: { icon: '⚡', name: 'SPORT', color: '#f59e0b' },
+                turbo: { icon: '🚀', name: 'TURBO', color: '#ef4444' }
+            };
+            
+            const modeEl = document.getElementById('ride-mode');
+            modeEl.textContent = `${modeInfo[mode].icon} ${modeInfo[mode].name}`;
+            modeEl.style.color = modeInfo[mode].color;
+            
+            // Bike jump animation
+            const bike = document.getElementById('ride-bike');
+            bike.classList.add('jumping');
+            setTimeout(() => bike.classList.remove('jumping'), 350);
+        }
+        
+        function triggerEvent() {
+            if (ride.paused) return;
+            ride.paused = true;
+            
+            // Pick random event
+            const event = EVENTS[Math.floor(Math.random() * EVENTS.length)];
+            
+            // Update popup
+            document.getElementById('event-icon').textContent = event.icon;
+            document.getElementById('event-title').textContent = event.title;
+            document.getElementById('event-text').textContent = event.text;
+            
+            const effectEl = document.getElementById('event-effect');
+            if (event.battery > 0) {
+                effectEl.textContent = `+${event.battery}% Battery`;
+                effectEl.className = 'event-effect positive';
+            } else if (event.battery < 0) {
+                effectEl.textContent = `${event.battery}% Battery`;
+                effectEl.className = 'event-effect negative';
+            } else {
+                effectEl.textContent = 'No effect';
+                effectEl.className = 'event-effect neutral';
+            }
+            
+            // Apply effect
+            ride.battery = Math.max(0, Math.min(100, ride.battery + event.battery));
+            
+            // Show popup
+            document.getElementById('event-overlay').classList.add('show');
+        }
+        
+        function closeEvent() {
+            document.getElementById('event-overlay').classList.remove('show');
+            ride.paused = false;
+        }
+        
+        function endRide(success) {
+            ride.running = false;
+            
+            // Stop loops
+            if (gameLoop) clearInterval(gameLoop);
+            if (treeSpawner) clearInterval(treeSpawner);
+            
+            // Calculate reward
+            let reward = 0;
+            if (success) {
+                const baseReward = Math.round(ride.trail.length * 8);
+                const batteryBonus = Math.round(ride.battery * 1.5);
+                reward = baseReward + batteryBonus;
+                
+                player.money += reward;
+                player.totalMiles += Math.round(ride.distance);
+                player.totalRides++;
+                savePlayer();
+            }
+            
+            // Update results screen
+            document.getElementById('results-icon').textContent = success ? '🏆' : '🔋';
+            
+            const titleEl = document.getElementById('results-title');
+            titleEl.textContent = success ? 'Trail Complete!' : 'Out of Battery!';
+            titleEl.className = 'results-title ' + (success ? 'success' : 'failure');
+            
+            document.getElementById('results-trail').textContent = ride.trail.name;
+            
+            document.getElementById('results-distance').textContent = ride.distance.toFixed(1) + ' mi';
+            
+            const mins = Math.floor(ride.time / 60);
+            const secs = Math.floor(ride.time % 60);
+            document.getElementById('results-time').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            document.getElementById('results-speed').textContent = Math.round(ride.topSpeed) + ' mph';
+            document.getElementById('results-battery').textContent = Math.round(ride.battery) + '%';
+            
+            const rewardEl = document.getElementById('results-reward');
+            if (success) {
+                rewardEl.style.display = 'block';
+                rewardEl.querySelector('.results-reward-text').textContent = `+$${reward} Earned!`;
+            } else {
+                rewardEl.style.display = 'none';
+            }
+            
+            showScreen('results');
+        }
+        
+        // ========== HELPER FUNCTIONS ==========
+        function renderBikeSVG(color, size) {
+            const scale = size / 100;
+            return `
+                <svg width="${size}" height="${size * 0.65}" viewBox="0 0 100 65">
+                    <g transform="scale(1)">
+                        <circle cx="18" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                        <circle cx="18" cy="45" r="5" fill="#334155"/>
+                        <circle cx="72" cy="45" r="14" fill="none" stroke="#334155" stroke-width="4"/>
+                        <circle cx="72" cy="45" r="5" fill="#334155"/>
+                        <path d="M18 45 L32 22 L60 22 L72 45" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M32 22 L32 45 L18 45" fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M60 22 L50 45" fill="none" stroke="${color}" stroke-width="4"/>
+                        <rect x="35" y="25" width="22" height="10" rx="2" fill="#1e293b"/>
+                        <rect x="37" y="27" width="6" height="6" rx="1" fill="${color}"/>
+                        <ellipse cx="30" cy="18" rx="10" ry="3" fill="#1e293b"/>
+                        <path d="M60 22 L68 15 L78 13" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                </svg>
+            `;
+        }
+        
+        function getRandomTreeSVG() {
+            const trees = [
+                // Pine
+                `<svg width="50" height="70" viewBox="0 0 50 70">
+                    <polygon points="25,5 45,30 38,30 48,50 35,50 42,65 8,65 15,50 2,50 12,30 5,30" fill="#166534"/>
+                    <rect x="21" y="60" width="8" height="10" fill="#78350f"/>
+                </svg>`,
+                // Round tree
+                `<svg width="45" height="60" viewBox="0 0 45 60">
+                    <circle cx="22" cy="22" r="20" fill="#15803d"/>
+                    <rect x="18" y="38" width="8" height="18" fill="#78350f"/>
+                </svg>`,
+                // Bush
+                `<svg width="40" height="35" viewBox="0 0 40 35">
+                    <ellipse cx="20" cy="20" rx="18" ry="14" fill="#16a34a"/>
+                    <ellipse cx="12" cy="18" rx="10" ry="10" fill="#15803d"/>
+                    <ellipse cx="28" cy="18" rx="10" ry="10" fill="#15803d"/>
+                </svg>`,
+                // Rock
+                `<svg width="35" height="28" viewBox="0 0 35 28">
+                    <polygon points="5,28 2,20 10,12 18,10 26,12 33,18 30,28" fill="#6b7280"/>
+                    <polygon points="10,12 18,10 15,18 7,20" fill="#9ca3af"/>
+                </svg>`
+            ];
+            return trees[Math.floor(Math.random() * trees.length)];
+        }
+        
+        function spawnInitialScenery() {
+            // Add some mountains to ride screen background
+            const world = document.getElementById('ride-world');
+            for (let i = 0; i < 5; i++) {
+                const mountain = document.createElement('div');
+                mountain.className = 'mountain';
+                mountain.style.left = (i * 25 - 10) + '%';
+                mountain.style.borderBottomWidth = (80 + Math.random() * 60) + 'px';
+                mountain.style.borderLeftWidth = (60 + Math.random() * 40) + 'px';
+                mountain.style.borderRightWidth = (60 + Math.random() * 40) + 'px';
+                mountain.style.opacity = 0.2 + Math.random() * 0.2;
+                world.appendChild(mountain);
+            }
+            
+            // Add clouds
+            for (let i = 0; i < 4; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'cloud';
+                cloud.style.width = (60 + Math.random() * 80) + 'px';
+                cloud.style.height = (20 + Math.random() * 15) + 'px';
+                cloud.style.top = (5 + Math.random() * 15) + '%';
+                cloud.style.left = (Math.random() * 100) + '%';
+                world.appendChild(cloud);
+            }
+        }
+        
+        // ========== PUBLIC API ==========
+        return {
+            init,
+            showScreen,
+            selectBike,
+            selectTrail,
+            buyUpgrade,
+            startRide,
+            setMode,
+            closeEvent
+        };
+    })();
+    
+    // Start the game
+    Game.init();
+    </script>
+</body>
+</html>
