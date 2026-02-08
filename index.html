@@ -1055,6 +1055,10 @@
             .left-panel, .right-panel {
                 grid-template-columns: 1fr;
             }
+            
+            .hide-mobile {
+                display: none !important;
+            }
 
             .header-stats {
                 gap: 15px;
@@ -1070,6 +1074,41 @@
 
             .start-features {
                 gap: 20px;
+            }
+        }
+        
+        /* Inline battery bar for riding screen */
+        .inline-battery-bar {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+        }
+        
+        .inline-battery-bar .battery-pct.warning { color: var(--warning); }
+        .inline-battery-bar .battery-pct.danger { color: var(--danger); }
+        
+        @media (max-width: 1100px) {
+            .inline-battery-bar {
+                display: block;
+            }
+            
+            /* Compact ride mode buttons */
+            .choices {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .choices .choice-btn {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .choices .choice-btn.danger {
+                grid-column: 1 / -1;
             }
         }
 
@@ -1199,8 +1238,8 @@
     </script>
     
     <!-- Bike Builder System -->
-    <script src="js/bike-builder.js?v=3" onerror="document.getElementById('load-error').textContent='Failed to load bike-builder.js';document.getElementById('load-error').style.display='block';"></script>
-    <script src="js/garage-ui.js?v=2" onerror="document.getElementById('load-error').textContent='Failed to load garage-ui.js';document.getElementById('load-error').style.display='block';"></script>
+    <script src="js/bike-builder.js?v=4" onerror="document.getElementById('load-error').textContent='Failed to load bike-builder.js';document.getElementById('load-error').style.display='block';"></script>
+    <script src="js/garage-ui.js?v=4" onerror="document.getElementById('load-error').textContent='Failed to load garage-ui.js';document.getElementById('load-error').style.display='block';"></script>
     
     <script>
     // ============================================================
@@ -1773,9 +1812,10 @@
         const progress = game.trailProgress;
         const progressPct = (progress / trail.length) * 100;
         const remaining = trail.length - progress;
+        const batteryClass = game.battery < 20 ? 'danger' : game.battery < 40 ? 'warning' : '';
 
         return `
-            <div class="left-panel">
+            <div class="left-panel hide-mobile">
                 ${renderBatteryPanel()}
                 ${renderInventoryPanel()}
                 ${renderWeatherPanel()}
@@ -1788,6 +1828,21 @@
                         <span class="screen-subtitle">${trail.state} • ${trail.surface}</span>
                     </div>
                     <div class="screen-content">
+                        <!-- Inline battery bar - always visible on mobile -->
+                        <div class="inline-battery-bar">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span>🔋</span>
+                                <div class="battery-bar" style="flex: 1; height: 20px;">
+                                    <div class="battery-bar-fill ${batteryClass}" style="width: ${game.battery}%"></div>
+                                </div>
+                                <span class="battery-pct ${batteryClass}" style="font-weight: 700; min-width: 45px;">${Math.round(game.battery)}%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">
+                                <span>~${Math.round(game.battery * (game.bike?.range || 40) / 100)} mi left</span>
+                                <span>${game.weather?.icon} ${game.weather?.name || 'Clear'}</span>
+                            </div>
+                        </div>
+                        
                         <div class="progress-container">
                             <div class="progress-label">
                                 <span><span class="highlight">${progress.toFixed(1)}</span> miles complete</span>
