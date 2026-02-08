@@ -730,6 +730,101 @@ function renderStarterSelect() {
 }
 
 // ===================
+// REAL BIKE SELECTION (Custom Package)
+// ===================
+
+function renderRealBikeSelect() {
+    const bikes = Object.values(REAL_BIKES);
+    
+    return `
+        <div class="main-screen" style="grid-column: 1 / -1;">
+            <div class="game-screen">
+                <div class="screen-header">
+                    <span class="screen-title">🏍️ CHOOSE YOUR BIKE</span>
+                    <span class="screen-subtitle">$${(game.money || 0).toLocaleString()} to spend</span>
+                </div>
+                <div class="screen-content">
+                    <p style="text-align: center; color: var(--text-dim); margin-bottom: 25px;">
+                        Pick your base bike. You'll customize it in the garage!
+                    </p>
+                    
+                    <div class="starter-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        ${bikes.map(bike => `
+                            <div class="starter-card ${game.selectedRealBike === bike.id ? 'selected' : ''}" 
+                                 onclick="selectRealBike('${bike.id}')"
+                                 style="cursor: pointer; padding: 20px; background: var(--bg-card); border-radius: 15px; border: 2px solid ${game.selectedRealBike === bike.id ? 'var(--primary)' : 'var(--border)'}; transition: all 0.3s;">
+                                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                    <span style="font-size: 2.5rem;">${bike.icon}</span>
+                                    <div>
+                                        <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary);">${bike.name}</div>
+                                        <div style="color: var(--text-dim); font-size: 0.85rem;">${bike.type} • ${bike.brand}</div>
+                                    </div>
+                                </div>
+                                <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 15px;">${bike.description}</p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.8rem;">
+                                    <div>⚡ ${bike.stats.topSpeed} mph</div>
+                                    <div>🔋 ${bike.stats.range} mi</div>
+                                    <div>💪 ${bike.stats.power}W</div>
+                                    <div>⚙️ ${bike.stats.torque} Nm</div>
+                                </div>
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: var(--warning); font-weight: 600;">$${bike.price.toLocaleString()}</span>
+                                    <span class="voltage-badge v${bike.compatibleVoltages[bike.compatibleVoltages.length-1]}">${bike.compatibleVoltages.join('V/')}V</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="choices" style="margin-top: 30px; text-align: center;">
+                        <button class="choice-btn" onclick="confirmRealBike()" ${!game.selectedRealBike ? 'disabled' : ''}>
+                            🔧 START WITH THIS BIKE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function selectRealBike(bikeId) {
+    game.selectedRealBike = bikeId;
+    playSound('select');
+    render();
+}
+
+function confirmRealBike() {
+    const bikeId = game.selectedRealBike;
+    if (!bikeId) return;
+    
+    const bike = REAL_BIKES[bikeId];
+    
+    // Deduct bike cost from money
+    game.money = (game.money || 0) - bike.price;
+    
+    // Set up the build
+    game.currentBuild = {
+        bike: bikeId,
+        controller: bike.stock.controller,
+        battery: bike.stock.battery,
+        motor: bike.stock.motor
+    };
+    
+    // Create the game bike
+    game.bike = createGameBike(game.currentBuild);
+    
+    game.buildLog = game.buildLog || [];
+    game.buildLog.push({
+        component: bike.name,
+        action: 'Purchased base bike'
+    });
+    
+    playSound('purchase');
+    saveGame();
+    game.screen = 'hub';
+    render();
+}
+
+// ===================
 // GAME INTEGRATION
 // ===================
 
