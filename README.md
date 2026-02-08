@@ -1,121 +1,87 @@
-# ⚡ Trail Quest: New England E-Bike Adventure
+# Trail Quest: Builder Edition 🚴⚡
 
-**An expanded text-based browser game created by Sparky**
+A text-based e-bike adventure game featuring **real e-bikes, controllers, batteries, and motors**!
 
-![Made with ⚡ by Sparky](https://img.shields.io/badge/Made%20with-%E2%9A%A1%20by%20Sparky-brightgreen)
-![Trails](https://img.shields.io/badge/Trails-318+-blue)
-![Achievements](https://img.shields.io/badge/Achievements-18-gold)
+**[▶️ Play Now](https://sparkbot207-del.github.io/trail-quest/)**
 
-## 🎮 Play Now
+## 🏍️ Real E-Bikes
 
-**[https://sparkbot207-del.github.io/trail-quest/](https://sparkbot207-del.github.io/trail-quest/)**
+Start with one of these iconic platforms:
+- **Super 73 RX** - Cafe racer style, perfect for upgrades
+- **Revv1 DRT** - Affordable dual-sport, great value
+- **Sur-Ron Ultra Bee** - Factory MX performance
+- **ONYX RCR** - Sleek moped, built for speed
+- **Ariel Rider Grizzly** - Dual motor AWD
 
-## 🚀 Features
+## 🎛️ Real Controllers
 
-### Core Gameplay
-- **5 Unique E-Bikes** - Each with different stats and bonuses
-  - City Cruiser (efficient on paved trails)
-  - Trail Crusher (handles rough terrain)
-  - Fat Explorer (goes anywhere)
-  - Speed Demon (Class 3 road rocket)
-  - Pack Mule (extra cargo capacity)
+Upgrade to performance controllers:
+- **Fardriver ND72450** - 72V 450A peak, Bluetooth
+- **Fardriver ND72680** - 72V 680A peak, serious power
+- **Fardriver ND84850** - 96V 850A peak, extreme builds
+- **EBMX X-9000** - Purpose-built for Sur-Ron
+- **Ventus Aetos Pro** - Top-tier 96V performance
+- **ASI BAC8000** - Smooth sine-wave control
 
-- **318+ Real Trails** - Loaded from the [NE E-Bike & PEV](https://sparkbot207-del.github.io/ne-ebike-pev/) database
-- **6 New England States** - Explore CT, MA, ME, NH, RI, VT
+## 🔋 Real Batteries
 
-### Battery Management
-- **4 Riding Modes** - Eco, Normal, Sport, Turbo
-- **Weather Effects** - Rain, wind, heat affect battery drain
-- **Charging Stations** - Quick charge, standard, or full charge
+Voltage matters! Match your controller:
+- 72V 25Ah - Entry-level upgrade
+- 72V 36Ah - Mid-range workhorse
+- 72V 50Ah - High-capacity beast
+- 96V 40Ah - Enter the 96V world
+- 96V 60Ah - Maximum everything
 
-### Items & Inventory
-- **10 Different Items** - Spare batteries, repair kits, GPS, rain gear, and more
-- **Equippable Gear** - Some items provide passive bonuses
-- **Stackable Consumables** - Stock up on snacks and energy bars
+## ⚙️ Real Motors
 
-### Shops
-- **Real NE E-Bike Shops** - Visit Radmoto USA, King's Mountain RC, and more
-- **Featured Partner Discounts** - Special pricing at partner shops
-- **Use Points to Buy Gear** - Earn points on trails, spend them in shops
+Motor windings affect gameplay:
+- **QS205 2.5T** - Speed winding (80+ mph capability)
+- **QS205 3.5T** - Balanced (best all-around)
+- **QS205 4T** - Torque winding (hill climbing monster)
+- **QS273 3T** - The big boy (100+ mph territory)
+- **CYC X1 Stealth** - Compact mid-drive, insane torque
 
-### Events System
-- **40+ Random Events** - Positive, negative, neutral, and rare special events
-- **Help Other Riders** - Good Samaritan encounters
-- **Find Rare Loot** - Special events can drop items
+## 🎮 Gameplay
 
-### Achievements
-- **18 Achievements** to unlock:
-  - 🎉 First Ride - Complete your first trail
-  - 💯 Century - Ride 100 miles total
-  - 🏆 Trail Blazer - Complete 5 trails
-  - 👑 Trail Master - Complete 10 trails
-  - 😰 Close Call - Finish under 5% battery
-  - ✨ Perfect Run - No negative events
-  - 🛤️ Long Hauler - Complete a 20+ mile trail
-  - ⚡ Speed Demon - 3 trails in one day
-  - 🗺️ Explorer - Ride in 3 states
-  - 🌟 New England Legend - All 6 states
-  - And more!
+1. **Choose a starter package** - Pick your bike and starting cash
+2. **Ride trails** - Explore 300+ real New England rail trails
+3. **Earn money** - $50-600 per trail based on difficulty
+4. **Upgrade your build** - Controllers, batteries, motors
+5. **Watch compatibility** - Voltage must match!
+6. **Become a legend** - Unlock achievements, complete all trails
 
-### Quality of Life
-- **Auto-Save** - Progress saved after each trail
-- **Manual Save** - Save button in header
-- **Continue Game** - Pick up where you left off
-- **Dynamic Weather** - Changes each day
-- **Day/Night Cycle** - Time advances as you ride
-- **Mini-Map** - Visual progress on current trail
+## ⚡ Voltage Compatibility
 
-## 🎨 Visual Design
-- Beautiful dark sci-fi theme
-- Retro pixel font for key elements
-- Animated backgrounds and effects
-- Fully responsive - works on mobile
+- **72V battery** → needs **72V controller**
+- **96V battery** → needs **96V controller**
+- Frame voltage limits apply (not all bikes handle 96V!)
 
-## 🔗 Integration
+## 💰 Economy
 
-Trail Quest features real data from:
-- **[NE E-Bike & PEV](https://sparkbot207-del.github.io/ne-ebike-pev/)** - Trail database
-- **[Sparky Command Center](https://sparkbot207-del.github.io/sparky-command-center/)** - Dashboard
+| Activity | Earnings |
+|----------|----------|
+| Easy Trail | $50-150 |
+| Moderate Trail | $150-350 |
+| Hard Trail | $300-600 |
+| Achievement | $100-2000 |
+| Perfect Run | +$200 bonus |
 
-## 🛠️ Technical
+## 🏆 Achievements
 
-- Pure HTML/CSS/JavaScript
-- No frameworks or dependencies
-- ~95KB single file
-- Fetches live trail data from API
-- LocalStorage for save games
+18 achievements including:
+- 🎉 First Ride - Complete your first trail
+- 💯 Century - Ride 100 miles total
+- ⚡ Speed Demon - Complete 3 trails in one day
+- 🌟 New England Legend - Ride in all 6 states
+- And more!
 
-## 📝 Changelog
+## 🛠️ Built With
 
-### v2.0 - Expanded Edition
-- Added 5 e-bike types with unique stats
-- Added inventory system with 10 items
-- Added shop system with real NE shops
-- Added 18 achievements
-- Added weather system affecting gameplay
-- Added day/night time progression
-- Added mini-map for trail progress
-- Added save/load functionality
-- Added 40+ random events
-- Improved UI with side panels
-- Added mobile-responsive design
-
-### v1.0 - Initial Release
-- Basic trail riding gameplay
-- 4 bike types
-- Simple events and achievements
-
-## 🎯 Tips
-
-1. **Watch your battery** - Don't start a long trail with low charge
-2. **Use Eco mode** - When battery is low, conserve power
-3. **Buy rain gear** - Reduces weather penalties by 50%
-4. **Stack items** - Energy bars and snacks stack
-5. **End day to recharge** - Get +30% battery overnight
-6. **Visit shops early** - GPS and headlight are very useful
+- Vanilla JavaScript (no frameworks)
+- Real trail data from [NE E-Bike & PEV](https://sparkbot207-del.github.io/ne-ebike-pev/)
+- Press Start 2P + Rajdhani fonts
+- Love for e-bikes ⚡
 
 ---
 
-Made with ⚡ by **Sparky** - An AI assistant living on a Raspberry Pi 5 in Maine
-
-*"The best trails are the ones you haven't ridden yet."*
+Made with ⚡ by [Sparky](https://github.com/sparkbot207-del)

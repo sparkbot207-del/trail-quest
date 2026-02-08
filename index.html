@@ -1177,10 +1177,15 @@
         </div>
     </div>
 
+    <!-- Bike Builder System -->
+    <script src="js/bike-builder.js"></script>
+    <script src="js/garage-ui.js"></script>
+    
     <script>
     // ============================================================
-    // TRAIL QUEST: NEW ENGLAND E-BIKE ADVENTURE - EXPANDED EDITION
+    // TRAIL QUEST: NEW ENGLAND E-BIKE ADVENTURE - BUILDER EDITION
     // Created by Sparky ⚡
+    // Now with real e-bikes, controllers, batteries, and motors!
     // ============================================================
 
     // ===================
@@ -1403,6 +1408,7 @@
         battery: 100,
         maxBattery: 100,
         score: 0,
+        money: 0, // Cash for upgrades
         totalMiles: 0,
         day: 1,
         time: 8, // 8 AM
@@ -1426,7 +1432,12 @@
         currentShop: null,
         eventsThisTrail: [],
         dayTrailsCompleted: 0,
-        soundEnabled: true
+        soundEnabled: true,
+        // Bike Builder additions
+        currentBuild: null,
+        buildLog: [],
+        selectedPackage: null,
+        shopType: null
     };
 
     // ===================
@@ -1495,6 +1506,9 @@
         switch (game.screen) {
             case 'start': content.innerHTML = renderStartScreen(); break;
             case 'select_bike': content.innerHTML = renderBikeSelect(); break;
+            case 'starter_select': content.innerHTML = renderStarterSelect(); break;
+            case 'garage': content.innerHTML = renderGarage(); break;
+            case 'component_shop': content.innerHTML = renderComponentShop(game.shopType); break;
             case 'hub': content.innerHTML = renderHub(); break;
             case 'riding': content.innerHTML = renderRiding(); break;
             case 'event': content.innerHTML = renderEvent(); break;
@@ -1514,11 +1528,12 @@
                         <h1 class="start-title">TRAIL QUEST</h1>
                         <p class="start-subtitle">New England E-Bike Adventure</p>
                         <p class="start-desc">
-                            Explore hundreds of miles of beautiful rail trails across New England.
-                            Manage your battery, collect gear, visit real e-bike shops, 
-                            and become a legendary trail rider!
+                            Build your dream e-bike with <span class="highlight">real parts</span>! 
+                            Start with a Super 73, ONYX, Sur-Ron, or Revv1. Upgrade with 
+                            Fardriver controllers, QS205 motors, and Chi batteries. 
+                            Ride hundreds of miles of New England rail trails!
                         </p>
-                        <button class="start-btn" onclick="startNewGame()">🚀 NEW GAME</button>
+                        <button class="start-btn" onclick="startNewGame()">🔧 BUILD & RIDE</button>
                         ${hasSavedGame() ? `
                             <button class="start-btn" style="background: var(--secondary); margin-left: 15px;" onclick="loadGame()">
                                 📂 CONTINUE
@@ -1526,12 +1541,26 @@
                         ` : ''}
                         <div class="start-features">
                             <div class="start-feature">
-                                <div class="start-feature-icon">🗺️</div>
-                                <div class="start-feature-text">${TRAILS.length}+ Real Trails</div>
+                                <div class="start-feature-icon">🏍️</div>
+                                <div class="start-feature-text">Real E-Bikes</div>
                             </div>
                             <div class="start-feature">
-                                <div class="start-feature-icon">🏪</div>
-                                <div class="start-feature-text">Real NE Shops</div>
+                                <div class="start-feature-icon">🎛️</div>
+                                <div class="start-feature-text">Fardriver & More</div>
+                            </div>
+                            <div class="start-feature">
+                                <div class="start-feature-icon">⚙️</div>
+                                <div class="start-feature-text">QS205 Motors</div>
+                            </div>
+                            <div class="start-feature">
+                                <div class="start-feature-icon">🔋</div>
+                                <div class="start-feature-text">72V-96V Builds</div>
+                            </div>
+                        </div>
+                        <div class="start-features" style="margin-top: 15px;">
+                            <div class="start-feature">
+                                <div class="start-feature-icon">🗺️</div>
+                                <div class="start-feature-text">${TRAILS.length}+ Real Trails</div>
                             </div>
                             <div class="start-feature">
                                 <div class="start-feature-icon">🌦️</div>
@@ -1540,6 +1569,10 @@
                             <div class="start-feature">
                                 <div class="start-feature-icon">🏆</div>
                                 <div class="start-feature-text">${ACHIEVEMENTS.length} Achievements</div>
+                            </div>
+                            <div class="start-feature">
+                                <div class="start-feature-icon">💰</div>
+                                <div class="start-feature-text">Earn & Upgrade</div>
                             </div>
                         </div>
                         <p style="margin-top: 30px; color: var(--text-dim); font-size: 0.9rem;">
@@ -1663,6 +1696,12 @@
                         ${trailsHtml}
                         
                         <div class="choices" style="margin-top: 25px;">
+                            ${game.currentBuild ? `
+                                <button class="choice-btn" onclick="goToGarage()">
+                                    🔧 Your Garage
+                                    <span class="choice-cost">Upgrade your build • $${(game.money || 0).toLocaleString()}</span>
+                                </button>
+                            ` : ''}
                             <button class="choice-btn secondary" onclick="goToShop()">
                                 🏪 Visit Shop
                                 <span class="choice-cost">Buy gear & supplies</span>
@@ -1824,7 +1863,7 @@
                         <div class="event-box gold" style="text-align: center;">
                             <h2 style="color: var(--gold); margin-bottom: 15px;">${trail.name}</h2>
                             <div style="font-size: 3rem; margin: 20px 0;">🏆</div>
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
+                            <div style="display: grid; grid-template-columns: repeat(${game.moneyEarned ? '4' : '3'}, 1fr); gap: 20px; margin: 20px 0;">
                                 <div>
                                     <div style="font-family: 'Press Start 2P', cursive; font-size: 1rem; color: var(--primary);">
                                         ${trail.length}
@@ -1837,6 +1876,14 @@
                                     </div>
                                     <div style="color: var(--text-dim); font-size: 0.85rem;">Points</div>
                                 </div>
+                                ${game.moneyEarned ? `
+                                <div>
+                                    <div style="font-family: 'Press Start 2P', cursive; font-size: 1rem; color: var(--gold);">
+                                        +$${game.moneyEarned}
+                                    </div>
+                                    <div style="color: var(--text-dim); font-size: 0.85rem;">Cash</div>
+                                </div>
+                                ` : ''}
                                 <div>
                                     <div style="font-family: 'Press Start 2P', cursive; font-size: 1rem; color: var(--secondary);">
                                         ${Math.round(game.battery)}%
@@ -2194,11 +2241,12 @@
 
     function startNewGame() {
         game = {
-            screen: 'select_bike',
+            screen: 'starter_select', // Go to starter package selection
             bike: null,
             battery: 100,
             maxBattery: 100,
             score: 0,
+            money: 0,
             totalMiles: 0,
             day: 1,
             time: 8,
@@ -2222,9 +2270,19 @@
             currentShop: null,
             eventsThisTrail: [],
             dayTrailsCompleted: 0,
-            soundEnabled: true
+            soundEnabled: true,
+            currentBuild: null,
+            buildLog: [],
+            selectedPackage: null,
+            shopType: null
         };
         generateWeather();
+        render();
+    }
+    
+    // Legacy bike selection for compatibility
+    function startClassicMode() {
+        game.screen = 'select_bike';
         render();
     }
 
@@ -2412,7 +2470,12 @@
         const bonus = calculateTrailBonus(trail);
         game.score += bonus;
         
-        // Check achievements
+        // Award money (for bike builder mode)
+        if (typeof awardTrailMoney === 'function') {
+            game.moneyEarned = awardTrailMoney(trail);
+        }
+        
+        // Check achievements (also awards money)
         game.newAchievements = checkAchievements();
         
         game.screen = 'trail_complete';
